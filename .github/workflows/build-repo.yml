@@ -77,18 +77,18 @@ jobs:
       run: |
         mkdir -p conf
         cat > conf/distributions << EOF
-	Origin: NAS Repository
-	Label: NAS Debian Repository
-	Codename: ${{ env.DIST }}
-	Architectures: ${{ env.ARCH }}
-	Components: ${{ env.COMPONENT }}
-	Description: Repository for NAS applications
-	SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
-	EOF
+        Origin: NAS Repository
+        Label: NAS Debian Repository
+        Codename: ${{ env.DIST }}
+        Architectures: ${{ env.ARCH }}
+        Components: ${{ env.COMPONENT }}
+        Description: Repository for NAS applications
+        SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
+        EOF
 
         cat > conf/options << EOF
-	basedir $(pwd)
-	EOF
+        basedir $(pwd)
+        EOF
 
     - name: Find and add all packages
       run: |

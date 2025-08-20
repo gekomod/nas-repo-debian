@@ -1,4 +1,4 @@
-name: Build Debian Repository
+name: Build Signed Debian Repository
 
 on:
   push:
@@ -17,41 +17,30 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y dpkg-dev apt-utils
+          sudo apt-get install -y gnupg dpkg-dev apt-utils
 
-      - name: Clean up duplicate packages
-        run: |
-          echo "🧹 Cleaning up duplicate packages..."
-          # Znajdź wszystkie pakiety i usuń duplikaty
-          find pool -name "*.deb" | while read deb_file; do
-            pkg_name=$(basename "$deb_file" | cut -d'_' -f1)
-            pkg_version=$(basename "$deb_file" | cut -d'_' -f2)
-            pkg_dir=$(dirname "$deb_file")
-            
-            # Sprawdź czy istnieje nowsza wersja
-            newer_version=$(find "$pkg_dir" -name "${pkg_name}_*.deb" -exec basename {} \; | sort -V | tail -n1)
-            current_file=$(basename "$deb_file")
-            
-            if [ "$current_file" != "$newer_version" ]; then
-                echo "🗑️ Removing old package: $current_file (keeping $newer_version)"
-                rm "$deb_file"
-            else
-                echo "✅ Keeping package: $current_file"
-            fi
-          done
-
-      - name: Create simple repository
+      - name: Create signed repository
         run: |
           chmod +x scripts/create-simple-repo.sh
           ./scripts/create-simple-repo.sh
 
-      - name: Verify repository structure
+      - name: Verify GPG signature
         run: |
-          echo "📦 Repository contents:"
-          find dists -type f | head -20
+          echo "🔍 Verifying GPG signature..."
+          if [ -f "dists/stable/Release.gpg" ]; then
+            gpg --verify dists/stable/Release.gpg dists/stable/Release && \
+            echo "✅ GPG signature verified successfully"
+          else
+            echo "❌ No GPG signature found"
+          fi
+
+      - name: List repository files
+        run: |
+          echo "📁 Repository contents:"
+          ls -la *.gpg *.md 2>/dev/null || echo "No root files found"
           echo ""
-          echo "📊 Package count:"
-          find dists/stable/main/binary-amd64 -name "*.deb" | wc -l
+          echo "📦 Packages directory:"
+          ls -la dists/stable/main/binary-amd64/*.deb 2>/dev/null || echo "No packages found"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -64,3 +53,5 @@ jobs:
         run: |
           echo "✅ Repository deployed to GitHub Pages"
           echo "🌐 Available at: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/"
+          echo "🔑 GPG key: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/KEY.gpg"
+          echo "📖 Instructions: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/INSTALL.md"

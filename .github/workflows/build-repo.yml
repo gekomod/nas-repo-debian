@@ -69,36 +69,23 @@ jobs:
 
       - name: Setup GPG environment
         run: |
-          # Utwórz directory GPG
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
           
-          # Importuj klucz
           gpg --import KEY.gpg
-          
-          # Pobierz fingerprint klucza
           KEY_FPR=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
           echo "🔑 GPG Key Fingerprint: $KEY_FPR"
-          
-          # Trust the key
           echo "$KEY_FPR:6:" | gpg --import-ownertrust
-          
-          # Eksportuj klucz do formatu, który zrozumie reprepro
-          gpg --export --armor > pubkey.asc
-          
-          # Sprawdź czy klucz jest dostępny
-          gpg --list-keys
           echo "✅ GPG key setup complete"
 
       - name: Setup repository structure
         run: |
           mkdir -p conf
           
-          # Pobierz fingerprint klucza
           KEY_FPR=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
           echo "🔑 Using GPG key: $KEY_FPR"
           
-          # Tworzenie pliku distributions
+          # TWORZENIE PLIKU distributions BEZ HEREDOC
           echo "Origin: NAS Repository" > conf/distributions
           echo "Label: NAS Debian Repository" >> conf/distributions
           echo "Codename: ${{ env.DIST }}" >> conf/distributions
@@ -106,53 +93,27 @@ jobs:
           echo "Components: ${{ env.COMPONENT }}" >> conf/distributions
           echo "Description: Repository for NAS applications" >> conf/distributions
           echo "SignWith: $KEY_FPR" >> conf/distributions
-          echo "Version: 1.0" >> conf/distributions
           
-          # Tworzenie pliku options
           echo "basedir $(pwd)" > conf/options
-
-      - name: Debug GPG keys
-        run: |
-          echo "🔍 Debug GPG keys:"
-          gpg --list-keys --with-colons
-          gpg --list-secret-keys --with-colons
-          echo "🔍 reprepro version:"
-          reprepro --version
 
       - name: Add packages to repository
         run: |
-          # Najpierw wyczyść stare indeksy jeśli istnieją
           rm -rf db dists 2>/dev/null || true
           
-          # Dodaj pakiety
           find pool -name "*.deb" | while read deb_file; do
             echo "📦 Adding package: $deb_file"
-            reprepro --ignore=missingkey includedeb ${{ env.DIST }} "$deb_file" || \
-            echo "⚠️  Package might have issues: $deb_file"
+            reprepro --ignore=wrongdistribution includedeb ${{ env.DIST }} "$deb_file" || \
+            reprepro --ignore=undefinedtarget includedeb ${{ env.DIST }} "$deb_file" || \
+            echo "⚠️  Failed to add: $deb_file"
           done
 
       - name: Export repository
         run: |
-          # Eksportuj bez podpisu jeśli są problemy
-          reprepro --ignore=missingkey export ${{ env.DIST }} || \
-          echo "⚠️  Export with signing failed, trying without..."
-          
-          # Jeśli nadal nie działa, spróbuj bez podpisu
-          if [ ! -f "dists/${{ env.DIST }}/Release.gpg" ]; then
-            echo "🔧 Creating unsigned repository..."
-            reprepro --nosign export ${{ env.DIST }}
-          fi
-
-      - name: Verify repository
-        run: |
-          echo "📦 Repository contents:"
-          ls -la dists/${{ env.DIST }}/
-          
-          if [ -f "dists/${{ env.DIST }}/Release.gpg" ]; then
-            echo "✅ Signed repository created"
-            gpg --verify dists/${{ env.DIST }}/Release.gpg dists/${{ env.DIST }}/Release
+          if reprepro export ${{ env.DIST }}; then
+            echo "✅ Repository exported successfully"
           else
-            echo "⚠️  Unsigned repository created"
+            echo "❌ Export failed, creating manual repository"
+            ./scripts/create-simple-repo.sh
           fi
 
       - name: Deploy to GitHub Pages

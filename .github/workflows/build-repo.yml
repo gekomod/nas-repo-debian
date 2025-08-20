@@ -31,7 +31,6 @@ jobs:
             echo "key-id=$KEY_ID" >> $GITHUB_OUTPUT
           else
             echo "🔐 Generating new GPG key..."
-            # Bezpieczne generowanie klucza bez problemów z YAML
             echo -e "Key-Type: RSA\nKey-Length: 4096\nName-Real: NAS Repository\nName-Email: nas-repo@users.noreply.github.com\nExpire-Date: 0" > gpg-input
             echo "%no-protection" >> gpg-input
             echo "%commit" >> gpg-input
@@ -65,36 +64,35 @@ jobs:
       - name: Setup repository structure
         run: |
           mkdir -p conf
-          cat > conf/distributions << EOF
-Origin: NAS Repository
-Label: NAS Debian Repository
-Codename: $DIST
-Architectures: $ARCH
-Components: $COMPONENT
-Description: Repository for NAS applications
-SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
-EOF
-
-          cat > conf/options << EOF
-basedir $(pwd)
-EOF
+          
+          # TWORZENIE PLIKU distributions BEZ HEREDOC - POPRAWNIE
+          echo "Origin: NAS Repository" > conf/distributions
+          echo "Label: NAS Debian Repository" >> conf/distributions
+          echo "Codename: ${{ env.DIST }}" >> conf/distributions
+          echo "Architectures: ${{ env.ARCH }}" >> conf/distributions
+          echo "Components: ${{ env.COMPONENT }}" >> conf/distributions
+          echo "Description: Repository for NAS applications" >> conf/distributions
+          echo "SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}" >> conf/distributions
+          
+          # TWORZENIE PLIKU options BEZ HEREDOC
+          echo "basedir $(pwd)" > conf/options
 
       - name: Find and add all packages
         run: |
           find pool -name "*.deb" | while read deb_file; do
             echo "📦 Adding package: $deb_file"
-            reprepro includedeb $DIST "$deb_file"
+            reprepro includedeb ${{ env.DIST }} "$deb_file"
           done
 
       - name: Export and sign repository
         run: |
-          reprepro export $DIST
-          cd dists/$DIST
+          reprepro export ${{ env.DIST }}
+          cd dists/${{ env.DIST }}
           gpg --verify Release.gpg Release
 
       - name: List all packages in repository
         run: |
-          reprepro list $DIST
+          reprepro list ${{ env.DIST }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

@@ -1,91 +1,66 @@
 #!/bin/bash
-# create-simple-repo.sh - Tworzenie repozytorium z podpisem GPG i KEY.gpg
+# create-simple-repo.sh - Poprawione repozytorium z właściwymi ścieżkami
 
 set -e
 
-echo "🏗️ Creating signed repository structure..."
+echo "🏗️ Creating properly structured repository..."
 
-# Utwórz podstawową strukturę
+# Utwórz poprawną strukturę repozytorium Debian
 mkdir -p dists/stable/main/binary-amd64
+mkdir -p pool/main
 
-# Skopiuj wszystkie pakiety
-echo "📦 Copying packages..."
-find pool -name "*.deb" -exec cp {} dists/stable/main/binary-amd64/ \;
+# Przenieś pakiety do pool/ (zgodnie ze standardem Debian)
+echo "📦 Moving packages to pool/..."
+find pool -name "*.deb" -exec cp {} pool/main/ \;
 
-# Wejdź do katalogu z pakietami
+# Wejdź do katalogu i utwórz Packages z poprawnymi ścieżkami
 cd dists/stable/main/binary-amd64
 
-# Usuń duplikaty - zostaw tylko najnowsze wersje
-echo "🔍 Removing duplicate packages..."
-for pkg in $(ls *.deb 2>/dev/null | cut -d'_' -f1 | sort -u); do
-    latest=$(ls ${pkg}_*.deb 2>/dev/null | sort -V | tail -n1)
-    if [ -n "$latest" ]; then
-        echo "✅ Keeping latest: $latest"
-        for file in ${pkg}_*.deb; do
-            if [ "$file" != "$latest" ]; then
-                echo "🗑️ Removing old: $file"
-                rm "$file"
-            fi
-        done
-    fi
-done
-
-# Utwórz plik override
-echo "📋 Creating override file..."
-cat > /tmp/override << EOF
-nas-panel optional main
-nas-web optional main
-EOF
-
-# Utwórz Packages
-echo "📦 Creating Packages file..."
+echo "📦 Creating Packages file with correct paths..."
 if command -v dpkg-scanpackages >/dev/null 2>&1; then
-    dpkg-scanpackages . /tmp/override > Packages 2>/dev/null || true
+    # Użyj poprawnej ścieżki do pool
+    dpkg-scanpackages ../../../../pool/main /dev/null > Packages 2>/dev/null || true
     gzip -9c Packages > Packages.gz
 else
-    echo "⚠️ dpkg-scanpackages not available, creating basic Packages file"
-    for deb in *.deb; do
-        echo "Package: $(echo $deb | cut -d'_' -f1)" >> Packages
-        echo "Filename: ./$deb" >> Packages
+    # Ręczne tworzenie Packages z POPRAWNYMI ścieżkami
+    for deb in ../../../../pool/main/*.deb; do
+        filename=$(basename "$deb")
+        pkg_name=$(echo "$filename" | cut -d'_' -f1)
+        pkg_version=$(echo "$filename" | cut -d'_' -f2)
+        pkg_arch=$(echo "$filename" | cut -d'_' -f3 | cut -d'.' -f1)
+        
+        echo "Package: $pkg_name" >> Packages
+        echo "Version: $pkg_version" >> Packages
+        echo "Architecture: $pkg_arch" >> Packages
+        echo "Filename: pool/main/$filename" >> Packages  # POPRAWNA ŚCIEŻKA!
         echo "Size: $(stat -c%s "$deb")" >> Packages
+        echo "SHA256: $(sha256sum "$deb" | cut -d' ' -f1)" >> Packages
         echo "" >> Packages
     done
     gzip -9c Packages > Packages.gz
 fi
 
-# Wróć do roota repozytorium
+# Wróć do roota
 cd ../../../../
 
-# GENERUJ KLUCZ GPG JEŚLI NIE ISTNIEJE
-echo "🔐 Setting up GPG signing..."
+# Generuj klucz GPG jeśli nie istnieje
 if [ ! -f "KEY.gpg" ]; then
-    echo "🔑 Generating new GPG key..."
+    echo "🔑 Generating GPG key..."
     cat > /tmp/gpg-gen << EOF
 Key-Type: RSA
 Key-Length: 4096
 Name-Real: NAS Repository
-Name-Email: nas-repo@users.noreply.github.com
+Name-Email: nas-repo@example.com
 Expire-Date: 0
 %no-protection
 %commit
 EOF
     gpg --batch --generate-key /tmp/gpg-gen
     rm /tmp/gpg-gen
-    
-    # Eksportuj klucz publiczny
-    KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-    gpg --armor --export "$KEY_ID" > KEY.gpg
-    echo "✅ Generated GPG key: $KEY_ID"
-else
-    echo "✅ Using existing GPG key"
-    gpg --import KEY.gpg
-    KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+    gpg --armor --export > KEY.gpg
 fi
 
-# Trust the key
-echo "$KEY_ID:6:" | gpg --import-ownertrust
-
-# Utwórz plik Release
+# Utwórz Release z poprawnymi hashami
 echo "📄 Creating Release file..."
 cat > dists/stable/Release << EOF
 Origin: NAS Repository
@@ -100,18 +75,26 @@ EOF
 
 # Dodaj hashe do Release
 if command -v apt-ftparchive >/dev/null 2>&1; then
-    apt-ftparchive release dists/stable/ >> dists/stable/Release 2>/dev/null || \
-    echo "⚠️ apt-ftparchive failed, using basic Release"
+    apt-ftparchive release dists/stable/ >> dists/stable/Release
 else
-    echo "⚠️ apt-ftparchive not available, using basic Release"
+    # Ręczne dodanie hashów
+    cd dists/stable
+    echo "MD5Sum:" >> Release
+    echo " $(md5sum Packages.gz | cut -d' ' -f1) $(stat -c%s Packages.gz) main/binary-amd64/Packages.gz" >> Release
+    echo " $(md5sum Packages | cut -d' ' -f1) $(stat -c%s Packages) main/binary-amd64/Packages" >> Release
+    echo "SHA256:" >> Release
+    echo " $(sha256sum Packages.gz | cut -d' ' -f1) $(stat -c%s Packages.gz) main/binary-amd64/Packages.gz" >> Release
+    echo " $(sha256sum Packages | cut -d' ' -f1) $(stat -c%s Packages) main/binary-amd64/Packages" >> Release
+    cd ../..
 fi
 
-# PODPISZ REPOZYTORIUM
+# Podpisz repozytorium
 echo "🔏 Signing repository..."
 cd dists/stable
-gpg --default-key "$KEY_ID" -abs -o Release.gpg Release
-gpg --default-key "$KEY_ID" --clearsign -o InRelease Release
+gpg --default-key "$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)" -abs -o Release.gpg Release
+gpg --clearsign -o InRelease Release
 cd ../..
+
 
 # ✅ DODAJ INSTRUKCJĘ INSTALACJI (KEY.gpg już jest w root)
 echo "📝 Adding installation instructions..."
@@ -120,12 +103,12 @@ cat > INSTALL.md << EOF
 
 ## 🔐 Add GPG Key
 \`\`\`bash
-wget -qO - https://RAW_URL_HERE/KEY.gpg | sudo apt-key add -
+wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -
 \`\`\`
 
 ## 📁 Add Repository
 \`\`\`bash
-echo "deb [arch=amd64] https://REPO_URL_HERE/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list
+echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list
 \`\`\`
 
 ## 🔄 Update & Install

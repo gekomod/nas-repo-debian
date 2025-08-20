@@ -49,6 +49,7 @@ jobs:
           echo "key-id=$KEY_ID" >> $GITHUB_OUTPUT
           echo "✅ Generated new GPG key: $KEY_ID"
         fi
+        EOF
 
   build-repository:
     runs-on: ubuntu-latest

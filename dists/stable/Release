@@ -1,0 +1,25 @@
+Origin: NAS Repository
+Label: NAS Debian Repository
+Suite: stable
+Codename: stable
+Architectures: amd64
+Components: main
+Description: Repository for NAS applications
+Date: Wed, 20 Aug 2025 18:01:01 +0000
+Date: Wed, 20 Aug 2025 18:01:01 +0000
+MD5Sum:
+ 2162e6b6e11ff462b2fc2d5cc2ad991c              242 Release
+ 345986d1f61ed1edf4c498d615b78a6d             1727 main/binary-amd64/Packages
+ 0067f57fca4551fb298a659612aa16a9              961 main/binary-amd64/Packages.gz
+SHA1:
+ eea13f7eae7d6c1038a1d86f2f2242d5ad95250e              242 Release
+ 5a433974962d1ddfd833fa01fa424e16983d1e66             1727 main/binary-amd64/Packages
+ e4a0a7b0db295afae975d1ff0d9686df82601f48              961 main/binary-amd64/Packages.gz
+SHA256:
+ 20863a2dad3d4429a4f0762b3be02db01f1587a8e73ead1d090ad2f968280bfa              242 Release
+ 1d09fa46e7e48080012d4991fb41e15d3ed4f268ede75fe6e0134ca97d654a29             1727 main/binary-amd64/Packages
+ 2ee837d8f7f6bf889b1c2402bc490524728c10432d41c0538cc3e333705a64f1              961 main/binary-amd64/Packages.gz
+SHA512:
+ 87223061c94789b55bc6b0f4ca0d01ad3a23866977b0d364b334b9b929d9ac397498d2865f19260c1b58d5f73a2ab85189e7c4d5141ccc326f2dbecc5faebe4a              242 Release
+ 19c12d7d9fc2c0bb504676262d58bc7993bf9420302d3b1068a5dd7122e449479304b1aa3d2d381b453c2f4e5e3506e4b5b0d12211e9d9bcc3e7859f6891936f             1727 main/binary-amd64/Packages
+ 987b686006265ff5ddf2e069803ba195d785f8a9c2d9d17030f0519f3661fd710fa153753e9e7e60de821c25d192998500ebd51a2a62161d9b6eb0b9ed61c526              961 main/binary-amd64/Packages.gz

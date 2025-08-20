@@ -1,32 +1,423 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NAS Debian Repository</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/@iconify/iconify/dist/iconify.js">
+    <script src="https://cdn.jsdelivr.net/npm/@iconify/iconify@3.0.0/dist/iconify.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+        }
+        
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -50px;
+            left: -50px;
+            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+            opacity: 0.8;
+        }
+        
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -30px;
+            right: -30px;
+            background: linear-gradient(45deg, #11998e 0%, #38ef7d 100%);
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            color: #409eff;
+            font-size: 64px;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 span.iconify {
+            color: #409eff;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #409eff;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.5;
+        }
+        
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .packages-list {
+            list-style: none;
+        }
+        
+        .packages-list li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .packages-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .packages-list li span.iconify {
+            color: #67c23a;
+        }
+        
+        .package-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .package-desc {
+            color: #7f8c8d;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #409eff;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #66b1ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #909399;
+        }
+        
+        .btn-secondary:hover {
+            background: #a6a9ad;
+            box-shadow: 0 4px 12px rgba(144, 147, 153, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            pre {
+                padding: 15px;
+                font-size: 12px;
+            }
+        }
+        
+        .dark-mode {
+            display: none;
+        }
+        
+        .dark-mode-label {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 24px;
+            background: #409eff;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            justify-content: space-between;
+            z-index: 100;
+        }
+        
+        .dark-mode-label .iconify {
+            color: white;
+            font-size: 14px;
+        }
+        
+        .dark-mode-label::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            left: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode:checked ~ .dark-mode-label::before {
+            transform: translateX(26px);
+        }
+        
+        /* Dark mode styles */
+        .dark-mode:checked ~ body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+            color: #f0f0f0;
+        }
+        
+        .dark-mode:checked ~ body .card {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark-mode:checked ~ body h1,
+        .dark-mode:checked ~ body h2,
+        .dark-mode:checked ~ body .package-name {
+            color: #f0f0f0;
+        }
+        
+        .dark-mode:checked ~ body .subtitle,
+        .dark-mode:checked ~ body .package-desc,
+        .dark-mode:checked ~ body .footer {
+            color: #a0a0a0;
+        }
+        
+        .dark-mode:checked ~ body pre,
+        .dark-mode:checked ~ body .packages-list li {
+            background: rgba(40, 40, 40, 0.8);
+            color: #f0f0f0;
+        }
+        
+        .dark-mode:checked ~ body code {
+            background: rgba(40, 40, 40, 0.8);
+            color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
-    <h1>NAS Debian Repository</h1>
-    <p>Repository for NAS applications</p>
+    <input type="checkbox" id="dark-mode-toggle" class="dark-mode">
+    <label for="dark-mode-toggle" class="dark-mode-label">
+        <span class="iconify" data-icon="mdi:weather-sunny"></span>
+        <span class="iconify" data-icon="mdi:weather-night"></span>
+    </label>
     
-    <h2>Installation</h2>
-    <pre>
-# Add GPG key
+    <div class="background">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="iconify logo-icon" data-icon="mdi:server-network"></span>
+                <h1>NAS Debian Repository</h1>
+                <p class="subtitle">Repozytorium aplikacji dla serwerów NAS</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2><span class="iconify" data-icon="mdi:download"></span> Instalacja</h2>
+            <p>Aby dodać repozytorium do swojego systemu, wykonaj poniższe polecenia:</p>
+            
+            <pre># Dodaj klucz GPG
 wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -
 
-# Add repository
+# Dodaj repozytorium
 echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | \
 sudo tee /etc/apt/sources.list.d/nas-repo.list
 
-# Update and install
+# Aktualizuj i instaluj
 sudo apt update
-sudo apt install nas-panel nas-webserver
-    </pre>
-    
-    <h2>Available Packages</h2>
-    <ul>
-        <li>nas-panel - Web management panel</li>
-        <li>nas-webserver - Lightweight web server</li>
-    </ul>
+sudo apt install nas-panel nas-webserver</pre>
+            
+            <a href="#" class="btn" onclick="copyCommands()">
+                <span class="iconify" data-icon="mdi:content-copy"></span>
+                Kopiuj polecenia
+            </a>
+        </div>
+        
+        <div class="card">
+            <h2><span class="iconify" data-icon="mdi:package-variant"></span> Dostępne pakiety</h2>
+            <ul class="packages-list">
+                <li>
+                    <span class="iconify" data-icon="mdi:web"></span>
+                    <div>
+                        <div class="package-name">nas-panel</div>
+                        <div class="package-desc">Panel zarządzania serwerem NAS przez przeglądarkę</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="iconify" data-icon="mdi:server"></span>
+                    <div>
+                        <div class="package-name">nas-webserver</div>
+                        <div class="package-desc">Lekki serwer WWW zoptymalizowany dla systemów NAS</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="iconify" data-icon="mdi:harddisk"></span>
+                    <div>
+                        <div class="package-name">nas-storage</div>
+                        <div class="package-desc">Narzędzia do zarządzania przestrzenią dyskową</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="iconify" data-icon="mdi:security"></span>
+                    <div>
+                        <div class="package-name">nas-backup</div>
+                        <div class="package-desc">Zaawansowane narzędzia do tworzenia kopii zapasowych</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2><span class="iconify" data-icon="mdi:help-circle"></span> Wsparcie</h2>
+            <p>Jeśli napotkasz problemy z instalacją lub korzystaniem z repozytorium, skorzystaj z następujących opcji:</p>
+            <br>
+            <a href="#" class="btn">
+                <span class="iconify" data-icon="mdi:book-open"></span>
+                Dokumentacja
+            </a>
+            <a href="#" class="btn btn-secondary">
+                <span class="iconify" data-icon="mdi:github"></span>
+                GitHub
+            </a>
+            <a href="#" class="btn btn-secondary">
+                <span class="iconify" data-icon="mdi:forum"></span>
+                Forum
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 NAS Panel Project. Wszystkie prawa zastrzeżone.</p>
+        </div>
+    </div>
+
+    <script>
+        function copyCommands() {
+            const commands = `wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -\necho "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list\nsudo apt update\nsudo apt install nas-panel nas-webserver`;
+            
+            navigator.clipboard.writeText(commands).then(() => {
+                alert('Polecenia zostały skopiowane do schowka!');
+            }).catch(err => {
+                console.error('Błąd podczas kopiowania: ', err);
+            });
+        }
+        
+        // Obsługa trybu ciemnego
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        if (prefersDarkScheme.matches) {
+            darkModeToggle.checked = true;
+        }
+        
+        darkModeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode-active', this.checked);
+        });
+    </script>
 </body>
 </html>

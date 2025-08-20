@@ -1,0 +1,174 @@
+name: Build and Sign Debian Repository
+
+on:
+  push:
+    tags:
+      - 'v*'
+  release:
+    types: [created]
+  workflow_dispatch:
+
+env:
+  DIST: stable
+  COMPONENT: main
+  ARCH: amd64
+
+jobs:
+  setup-gpg:
+    runs-on: ubuntu-latest
+    outputs:
+      gpg-key-id: ${{ steps.generate-key.outputs.key-id }}
+      gpg-public-key: ${{ steps.export-key.outputs.public-key }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Generate GPG key
+      id: generate-key
+      run: |
+        # Generuj klucz GPG bez interakcji
+        gpg --batch --generate-key <<EOF
+        Key-Type: RSA
+        Key-Length: 4096
+        Key-Usage: sign
+        Name-Real: NAS Repository
+        Name-Email: nas-repo@users.noreply.github.com
+        Expire-Date: 0
+        %no-protection
+        %commit
+        EOF
+        
+        # Pobierz ID klucza
+        KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec:' | head -1 | cut -d':' -f5)
+        echo "key-id=$KEY_ID" >> $GITHUB_OUTPUT
+        echo "Generated GPG key: $KEY_ID"
+
+    - name: Export public key
+      id: export-key
+      run: |
+        gpg --armor --export "${{ steps.generate-key.outputs.key-id }}" > KEY.gpg
+        echo "public-key=$(cat KEY.gpg | base64 -w0)" >> $GITHUB_OUTPUT
+
+    - name: Upload public key
+      uses: actions/upload-artifact@v4
+      with:
+        name: gpg-public-key
+        path: KEY.gpg
+
+  build-packages:
+    runs-on: ubuntu-latest
+    needs: setup-gpg
+    strategy:
+      matrix:
+        package: [nas-panel, nas-webserver]
+    
+    steps:
+    - name: Checkout package code
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.repository_owner }}/${{ matrix.package }}
+        path: ${{ matrix.package }}
+
+    - name: Setup build environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential devscripts debhelper
+
+    - name: Build ${{ matrix.package }}
+      run: |
+        cd ${{ matrix.package }}
+        debuild -b -uc -us
+      env:
+        DEB_BUILD_OPTIONS: nocheck
+
+    - name: Upload package artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.package }}-deb
+        path: ${{ matrix.package }}/../*.deb
+
+  create-repository:
+    runs-on: ubuntu-latest
+    needs: [setup-gpg, build-packages]
+    steps:
+    - name: Checkout repo-debian
+      uses: actions/checkout@v4
+      with:
+        path: nas-repo-debian
+
+    - name: Download all packages
+      uses: actions/download-artifact@v4
+      with:
+        path: downloaded-packages
+
+    - name: Download GPG public key
+      uses: actions/download-artifact@v4
+      with:
+        name: gpg-public-key
+        path: .
+
+    - name: Setup repository tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y reprepro gnupg apt-utils
+
+    - name: Import GPG key
+      run: |
+        gpg --import KEY.gpg
+        # Trust the key
+        echo "$(gpg --list-secret-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10):6:" | gpg --import-ownertrust
+
+    - name: Setup repository structure
+      run: |
+        cd nas-repo-debian
+        mkdir -p conf
+        cat > conf/distributions << EOF
+        Origin: NAS Repository
+        Label: NAS Debian Repository
+        Codename: ${{ env.DIST }}
+        Architectures: ${{ env.ARCH }}
+        Components: ${{ env.COMPONENT }}
+        Description: Repository for NAS applications
+        SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
+        EOF
+
+    - name: Add packages to repository
+      run: |
+        cd nas-repo-debian
+        find ../downloaded-packages -name "*.deb" -exec reprepro -b . includedeb ${{ env.DIST }} {} \;
+
+    - name: Sign repository
+      run: |
+        cd nas-repo-debian
+        reprepro -b . export ${{ env.DIST }}
+
+    - name: Verify repository signature
+      run: |
+        cd nas-repo-debian/dists/${{ env.DIST }}
+        gpg --verify Release.gpg Release
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./nas-repo-debian
+        keep_files: true
+
+    - name: Create release with packages
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: downloaded-packages/*.deb
+        body: |
+          Debian packages for NAS applications
+          
+          ## Installation
+          ```bash
+          # Add repository
+          wget -qO - https://${{ github.repository_owner }}.github.io/nas-repo-debian/KEY.gpg | sudo apt-key add -
+          echo "deb [arch=amd64] https://${{ github.repository_owner }}.github.io/nas-repo-debian/ ${{ env.DIST }} ${{ env.COMPONENT }}" | sudo tee /etc/apt/sources.list.d/nas-repo.list
+          
+          # Install packages
+          sudo apt update
+          sudo apt install nas-panel nas-webserver
+          ```

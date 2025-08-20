@@ -1,5 +1,5 @@
 #!/bin/bash
-# create-simple-repo.sh - Tworzenie repozytorium z inteligentnym zarządzaniem kluczami GPG
+# create-simple-repo.sh - Poprawione generowanie pliku Packages
 
 set -e
 
@@ -9,23 +9,20 @@ echo "🏗️ Creating properly structured repository..."
 mkdir -p dists/stable/main/binary-amd64
 mkdir -p pool/main
 
-# Przenieś pakiety do pool/ (zgodnie ze standardem Debian)
-echo "📦 Moving packages to pool/..."
+# Skopiuj pakiety do pool/
+echo "📦 Copying packages to pool/..."
 find pool -name "*.deb" -exec cp {} pool/main/ \;
 
-# Wejdź do katalogu i utwórz Packages z POPRAWNYMI ścieżkami
-echo "📦 Creating Packages file with CORRECT paths..."
-if command -v dpkg-scanpackages >/dev/null 2>&1; then
-    # Użyj dpkg-scanpackages z właściwym katalogiem bazowym
-    cd pool/main
-    dpkg-scanpackages . /dev/null > ../../dists/stable/main/binary-amd64/Packages 2>/dev/null
-    cd ../../dists/stable/main/binary-amd64
-    gzip -9c Packages > Packages.gz
-    cd ../../../../
-else
-    # Ręczne tworzenie Packages z ABSOLUTNIE POPRAWNYMI ścieżkami
-    cd dists/stable/main/binary-amd64
-    for deb in ../../../../pool/main/*.deb; do
+# UTWÓRZ POPRAWNY PLIK PACKAGES BEZ UŻYCIA dpkg-scanpackages
+echo "📦 Creating CORRECT Packages file..."
+cd dists/stable/main/binary-amd64
+
+# Wyczyść stary plik Packages
+> Packages
+
+# Ręcznie utwórz poprawny plik Packages
+for deb in ../../../../pool/main/*.deb; do
+    if [ -f "$deb" ]; then
         filename=$(basename "$deb")
         pkg_name=$(echo "$filename" | cut -d'_' -f1)
         pkg_version=$(echo "$filename" | cut -d'_' -f2)
@@ -35,13 +32,21 @@ else
         echo "Version: $pkg_version" >> Packages
         echo "Architecture: $pkg_arch" >> Packages
         echo "Filename: pool/main/$filename" >> Packages  # PRAWIDŁOWA ŚCIEŻKA!
-        echo "Size: $(stat -c%s "../../../../pool/main/$filename")" >> Packages
-        echo "SHA256: $(sha256sum "../../../../pool/main/$filename" | cut -d' ' -f1)" >> Packages
+        echo "Size: $(stat -c%s "$deb")" >> Packages
+        echo "SHA256: $(sha256sum "$deb" | cut -d' ' -f1)" >> Packages
+        echo "MD5sum: $(md5sum "$deb" | cut -d' ' -f1)" >> Packages
+        echo "Description: NAS Application" >> Packages
         echo "" >> Packages
-    done
-    gzip -9c Packages > Packages.gz
-    cd ../../../
-fi
+        
+        echo "✅ Added to Packages: $filename"
+    fi
+done
+
+# Kompresuj
+gzip -9c Packages > Packages.gz
+cd ../../../../
+
+echo "✅ Packages file created with correct paths"
 
 # SPRAWDŹ CZY KLUCZ GPG JUŻ ISTNIEJE I GO UŻYJ LUB UTWÓRZ NOWY
 echo "🔐 Setting up GPG signing..."

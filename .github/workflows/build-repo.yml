@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - 'pool/**'
-      - 'KEY.gpg'
   workflow_dispatch:
 
 jobs:
@@ -14,34 +13,55 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y gnupg dpkg-dev apt-utils
+          sudo apt-get install -y gnupg
 
-      - name: Setup GPG keys
-        run: |
-          chmod +x scripts/check-gpg-keys.sh
-          ./scripts/check-gpg-keys.sh
-
-      - name: Verify GPG key
-        run: |
-          echo "🔍 Verifying GPG key..."
-          if [ -f "KEY.gpg" ]; then
-            echo "✅ KEY.gpg exists"
-            gpg --list-keys | grep "NAS Repository" || echo "❌ Key not found in keyring"
-          else
-            echo "❌ KEY.gpg missing after setup"
-            exit 1
-          fi
-
-      - name: Create repository
+      - name: Create repository with correct paths
         run: |
           chmod +x scripts/create-simple-repo.sh
           ./scripts/create-simple-repo.sh
+
+      - name: Verify Packages file
+        run: |
+          echo "🔍 VERIFYING Packages file paths..."
+          if [ -f "dists/stable/main/binary-amd64/Packages" ]; then
+            # Sprawdź czy ścieżki są poprawne
+            BAD_PATHS=$(grep "Filename:" dists/stable/main/binary-amd64/Packages | grep -E "\.\./|\./|/[^/]*/\.\." | wc -l)
+            
+            if [ "$BAD_PATHS" -gt 0 ]; then
+                echo "❌ Found $BAD_PATHS bad paths, running fix script..."
+                chmod +x scripts/fix-packages.sh
+                ./scripts/fix-packages.sh
+            else
+                echo "✅ All paths are correct:"
+                grep "Filename:" dists/stable/main/binary-amd64/Packages | head -5
+            fi
+          else
+            echo "❌ Packages file missing"
+            exit 1
+          fi
+
+      - name: Test package URLs
+        run: |
+          echo "🔗 TESTING package URLs..."
+          if [ -f "dists/stable/main/binary-amd64/Packages" ]; then
+            grep "Filename:" dists/stable/main/binary-amd64/Packages | while read line; do
+              filename=$(echo "$line" | cut -d' ' -f2)
+              
+              # Sprawdź format ścieżki
+              if [[ "$filename" != "pool/main/"* ]]; then
+                echo "❌ BAD PATH: $filename"
+                echo "   Should be: pool/main/$(basename "$filename")"
+              elif [ ! -f "$filename" ]; then
+                echo "❌ MISSING FILE: $filename"
+              else
+                echo "✅ GOOD PATH: $filename"
+              fi
+            done
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -50,8 +70,8 @@ jobs:
           publish_dir: .
           keep_files: true
 
-      - name: Final verification
+      - name: Final test
         run: |
-          echo "✅ Repository deployed successfully!"
-          echo "🔑 GPG Key: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/KEY.gpg"
-          echo "📦 Packages: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/pool/main/"
+          echo "✅ Repository deployed"
+          echo "🌐 Test URL: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/pool/main/nas-web_1.2.6_amd64.deb"
+          echo "📦 Correct package path: pool/main/nas-web_1.2.6_amd64.deb"

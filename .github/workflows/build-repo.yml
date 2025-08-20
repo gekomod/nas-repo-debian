@@ -21,6 +21,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Setup GPG keys
       id: setup-keys
@@ -34,22 +36,21 @@ jobs:
         else
           # Generuj nowy klucz
           echo "🔐 Generating new GPG key..."
-          gpg --batch --generate-key <<EOF
-          Key-Type: RSA
-          Key-Length: 4096
-          Name-Real: NAS Repository
-          Name-Email: nas-repo@users.noreply.github.com
-          Expire-Date: 0
-          %no-protection
-          %commit
-          EOF
+          gpg --batch --generate-key <<'EOF'
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: NAS Repository
+Name-Email: nas-repo@users.noreply.github.com
+Expire-Date: 0
+%no-protection
+%commit
+EOF
           
           KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
           gpg --armor --export "$KEY_ID" > KEY.gpg
           echo "key-id=$KEY_ID" >> $GITHUB_OUTPUT
           echo "✅ Generated new GPG key: $KEY_ID"
         fi
-        EOF
 
   build-repository:
     runs-on: ubuntu-latest
@@ -57,6 +58,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Install required tools
       run: |
@@ -67,24 +70,25 @@ jobs:
       run: |
         gpg --import KEY.gpg
         # Trust the key
-        echo "$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10):6:" | gpg --import-ownertrust
+        KEY_FPR=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+        echo "$KEY_FPR:6:" | gpg --import-ownertrust
 
     - name: Setup repository structure
       run: |
         mkdir -p conf
         cat > conf/distributions << EOF
-        Origin: NAS Repository
-        Label: NAS Debian Repository
-        Codename: ${{ env.DIST }}
-        Architectures: ${{ env.ARCH }}
-        Components: ${{ env.COMPONENT }}
-        Description: Repository for NAS applications
-        SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
-        EOF
+Origin: NAS Repository
+Label: NAS Debian Repository
+Codename: ${{ env.DIST }}
+Architectures: ${{ env.ARCH }}
+Components: ${{ env.COMPONENT }}
+Description: Repository for NAS applications
+SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
+EOF
 
         cat > conf/options << EOF
-        basedir $(pwd)
-        EOF
+basedir $(pwd)
+EOF
 
     - name: Find and add all packages
       run: |

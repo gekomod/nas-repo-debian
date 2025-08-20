@@ -16,11 +16,14 @@ find pool -name "*.deb" -exec cp {} pool/main/ \;
 # Wejdź do katalogu i utwórz Packages z poprawnymi ścieżkami
 cd dists/stable/main/binary-amd64
 
-echo "📦 Creating Packages file with correct paths..."
+echo "📦 Creating Packages file with CORRECT paths..."
 if command -v dpkg-scanpackages >/dev/null 2>&1; then
-    # Użyj poprawnej ścieżki do pool
-    dpkg-scanpackages ../../../../pool/main /dev/null > Packages 2>/dev/null || true
+    # Użyj dpkg-scanpackages z właściwym katalogiem bazowym
+    cd pool/main
+    dpkg-scanpackages . /dev/null > ../../../dists/stable/main/binary-amd64/Packages 2>/dev/null
+    cd ../../../dists/stable/main/binary-amd64
     gzip -9c Packages > Packages.gz
+    cd ../../../../
 else
     # Ręczne tworzenie Packages z POPRAWNYMI ścieżkami
     for deb in ../../../../pool/main/*.deb; do
@@ -33,8 +36,8 @@ else
         echo "Version: $pkg_version" >> Packages
         echo "Architecture: $pkg_arch" >> Packages
         echo "Filename: pool/main/$filename" >> Packages  # POPRAWNA ŚCIEŻKA!
-        echo "Size: $(stat -c%s "$deb")" >> Packages
-        echo "SHA256: $(sha256sum "$deb" | cut -d' ' -f1)" >> Packages
+        echo "Size: $(stat -c%s "../../../../pool/main/$filename")" >> Packages
+        echo "SHA256: $(sha256sum "../../../../pool/main/$filename" | cut -d' ' -f1)" >> Packages
         echo "" >> Packages
     done
     gzip -9c Packages > Packages.gz

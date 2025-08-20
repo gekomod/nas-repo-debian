@@ -8,37 +8,24 @@ Codename: stable
 Architectures: amd64
 Components: main
 Description: Repository for NAS applications
-Date: Wed, 20 Aug 2025 19:17:15 +0000
-Date: Wed, 20 Aug 2025 19:17:15 +0000
+Date: Wed, 20 Aug 2025 19:41:15 +0000
 MD5Sum:
- 36970c23a073872f3649d86bf4eb708e              242 Release
- c7419dc4d29f9a7e5b4ddf0972cb29df             1765 main/binary-amd64/Packages
- 9863325a74df31a2d8e01bc11e039137              969 main/binary-amd64/Packages.gz
-SHA1:
- 8ff0cc8e16ad001c46f3bd34af56f371bf5af835              242 Release
- 0c39dc81ce2d5b726658be7cbaab7ed54958d4e2             1765 main/binary-amd64/Packages
- 3fb8bfff49fcf97a00aaa29f4728feada0d2cac9              969 main/binary-amd64/Packages.gz
+ 5e661f227fd0b9f93dd7352ee199edae 960 main/binary-amd64/Packages.gz
 SHA256:
- a520c6234b857771dab94c9efbde3250aaed5c0dd7588acc0c0eaa40311cb930              242 Release
- f921c4f555d78b48b5b07ad83f4a312dd4af94869ae3e3e7a9d47e23358c01cd             1765 main/binary-amd64/Packages
- a96a0864d2d6fc63f998f1005c340695301b0bbc9c98b42c7f1f4b63b60c759f              969 main/binary-amd64/Packages.gz
-SHA512:
- 37a79047ec01c9fada2a7b3fab7dbd5d6e7e0eb264a8da6dc19f0278aa0584add929c3cde39386387f319d07e2f4e0b561dc30b11cf952ed18698328ab71390e              242 Release
- e837cc43375de64ae9eb839eebc1526924c9005671cc067cb2ae8af9f1e552e29e7ffb7bd42a5c4549decf5d2def55b118fd4a9626547b175ec841198d7ef008             1765 main/binary-amd64/Packages
- abc7c2ac9621f2e9f404ba82b22ce28b72a625ddba2c46dea000cf5fe84c349d3269571707427fb707abd9c606525ab2b77ac121046bd671f835de41f85cb9aa              969 main/binary-amd64/Packages.gz
+ 72844c4f4c971bfdb1769cd49fbc4bf4379d480e76d2a0353ee1b3615efe81d1 960 main/binary-amd64/Packages.gz
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE+rfU7HyoubmV0+V8GSpiClwVUr4FAmimHzsACgkQGSpiClwV
-Ur6V+w/8CO3GaMYXNjtJdID+VCUzxPNrjX+4aZRJzgiQFbbsOsq43KVTiBjg5FLg
-4YrZ1cQVMNkT+gGin/eit7ZfmCDmcpZFirwk4jCQ93rhPEYfIXRFHn/EbMIipuD1
-IHcFKen5aHspOu3tq6Sv8lJHq+X24aek3hkM76XOOn8JU/Tn1yu8CjKcoy82BHoc
-FOq0B+IGESoZxa7JuzWNS/57I+H4FqQjtmPVfyXTf61ZZZutuf48VzUAFmCeqUeI
-CpLM2G9hqWUBx+iGJbuHFu0EF9gfMmf7EjrIOra0Wg4SO0bttglNJ+i21N03uREP
-Jg1mzghFKunK0IQbWeOPQupraO3cv3tlX9HMhiAExGnc0EF592+c/6Tx5TvpwqaF
-NQFCRd0Z7oIeu1H08G6vFeo99m2iNoUinU+IaNFl/s37GQPi/8m9mLxWyoM6OjmN
-irwgZKP96OjPpL5cOcPYj9jNZO8KgyRFSFRZMrDflZAtoydgoFY6Gw0opMhOGmmQ
-fXWWN7yQD+VAQbXCjr4lvrWAV5WqGYH0t6o6VVwOYXDF6elk0khRqEXE33Wm7LXI
-I1wGx564k7bhmuHb8zERTFddEdtzO1hVj/P0QVNQI+pUy5xSf574JU+iY48LzrNn
-IEwIpEYrFHsq4wmCPHKIYvoYJfKZPI9henJZMy7zfHxXisb7Nuw=
-=4woC
+iQIzBAEBCgAdFiEELhYzZYWop4254iv6eASzK1kffwAFAmimJNsACgkQeASzK1kf
+fwD/hRAAzmyP32G67wgYxxNz1QwBDYi44FIqUVT4Uhnre5oVsKjg19UYs2agGlSG
+jwYdLDWu48S6rwfYkzuFjdFACw5zkTeTAw5X6KPEB1b7K/dkomuc63SLtdy66eqd
+CLn19i/crlgToHXbxU9+uB6gyJaf+9vI7dEIam9GB2revMP9RR8vEy03bATV5ibW
++lYCw2nPWRWfA37tOL9Pt7Pk0FwrUUIdwcgqQvIsSnrl21WHdKkO5HaFhaIMZRPV
+X7Ik1ETLoQd3mLiH21qHxRbDH50R9/BNuZcoKX55wLe+CpoEmeW4QEdHD3OOpRdB
+9menvz/44aCtjTIs6jPkvRUSHKQCDu0YuFRs1qWQc6UX4b451ZAww+gfUeeZXnCU
+rEQYLTiX22Cuasnxx4w4kjFXGuLYqlRJdgETgauazP7YQuooJjf5POIwW/a3xoNG
+QYropBMkSlhFdyNr4ONZgPOnEZ4WMx47VPbfaKkmCQeSHq5JMNlDJeSnuwj+UtFJ
+dZu+tQevlrVs1z7UqnqQmh+Lyea7Z5C4RWHrC3/UsMjbjVjf/4qDBbuFa8eJIPb6
+WV8OwTkwWtpYrGswyI2Hqd93RZVzwnyuiCRQZg6uHelg0Qr2NeMFRbAtFW3xeCQW
+rbStThTqvgHQglXpPbjH5cU9OwvEoe8UYj0paSRdrgXUpz1DgjM=
+=0wyr
 -----END PGP SIGNATURE-----

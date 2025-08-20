@@ -1,10 +1,11 @@
-name: Build Signed Debian Repository
+name: Build Debian Repository
 
 on:
   push:
     branches: [main]
     paths:
       - 'pool/**'
+      - 'KEY.gpg'
   workflow_dispatch:
 
 jobs:
@@ -13,34 +14,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install tools
         run: |
           sudo apt-get update
           sudo apt-get install -y gnupg dpkg-dev apt-utils
 
-      - name: Create signed repository
+      - name: Setup GPG keys
+        run: |
+          chmod +x scripts/check-gpg-keys.sh
+          ./scripts/check-gpg-keys.sh
+
+      - name: Verify GPG key
+        run: |
+          echo "🔍 Verifying GPG key..."
+          if [ -f "KEY.gpg" ]; then
+            echo "✅ KEY.gpg exists"
+            gpg --list-keys | grep "NAS Repository" || echo "❌ Key not found in keyring"
+          else
+            echo "❌ KEY.gpg missing after setup"
+            exit 1
+          fi
+
+      - name: Create repository
         run: |
           chmod +x scripts/create-simple-repo.sh
           ./scripts/create-simple-repo.sh
-
-      - name: Verify GPG signature
-        run: |
-          echo "🔍 Verifying GPG signature..."
-          if [ -f "dists/stable/Release.gpg" ]; then
-            gpg --verify dists/stable/Release.gpg dists/stable/Release && \
-            echo "✅ GPG signature verified successfully"
-          else
-            echo "❌ No GPG signature found"
-          fi
-
-      - name: List repository files
-        run: |
-          echo "📁 Repository contents:"
-          ls -la *.gpg *.md 2>/dev/null || echo "No root files found"
-          echo ""
-          echo "📦 Packages directory:"
-          ls -la dists/stable/main/binary-amd64/*.deb 2>/dev/null || echo "No packages found"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -49,9 +50,8 @@ jobs:
           publish_dir: .
           keep_files: true
 
-      - name: Verify deployment
+      - name: Final verification
         run: |
-          echo "✅ Repository deployed to GitHub Pages"
-          echo "🌐 Available at: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/"
-          echo "🔑 GPG key: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/KEY.gpg"
-          echo "📖 Instructions: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/INSTALL.md"
+          echo "✅ Repository deployed successfully!"
+          echo "🔑 GPG Key: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/KEY.gpg"
+          echo "📦 Packages: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/pool/main/"

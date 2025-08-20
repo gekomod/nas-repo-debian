@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NAS Debian Repository</title>
-    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
-    <link rel="stylesheet" href="https://unpkg.com/@iconify/iconify/dist/iconify.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
     <script src="https://cdn.jsdelivr.net/npm/@iconify/iconify@3.0.0/dist/iconify.min.js"></script>
     <style>
         * {
@@ -21,6 +22,12 @@
             overflow-x: hidden;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+            color: #f0f0f0;
         }
         
         .background {
@@ -56,7 +63,7 @@
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
             z-index: 1;
@@ -64,7 +71,7 @@
         
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         
         .logo {
@@ -85,9 +92,17 @@
             color: #2c3e50;
         }
         
+        body.dark-mode h1 {
+            color: #f0f0f0;
+        }
+        
         .subtitle {
             font-size: 18px;
             color: #7f8c8d;
+        }
+        
+        body.dark-mode .subtitle {
+            color: #a0a0a0;
         }
         
         .card {
@@ -97,6 +112,12 @@
             backdrop-filter: blur(10px);
             padding: 30px;
             margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .card {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         h2 {
@@ -108,8 +129,34 @@
             gap: 10px;
         }
         
+        body.dark-mode h2 {
+            color: #f0f0f0;
+        }
+        
         h2 span.iconify {
             color: #409eff;
+        }
+        
+        .command-block {
+            margin: 25px 0;
+        }
+        
+        .command-title {
+            font-weight: bold;
+            color: #409eff;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        body.dark-mode .command-title {
+            color: #66b1ff;
+        }
+        
+        .command-title .iconify {
+            font-size: 1.2em;
         }
         
         pre {
@@ -117,10 +164,15 @@
             border-radius: 8px;
             padding: 20px;
             overflow-x: auto;
-            margin: 20px 0;
+            margin: 10px 0;
             border-left: 4px solid #409eff;
             font-family: 'Fira Code', monospace;
             line-height: 1.5;
+        }
+        
+        body.dark-mode pre {
+            background: rgba(40, 40, 40, 0.8);
+            color: #f0f0f0;
         }
         
         code {
@@ -130,37 +182,9 @@
             font-family: 'Fira Code', monospace;
         }
         
-        .packages-list {
-            list-style: none;
-        }
-        
-        .packages-list li {
-            padding: 15px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .packages-list li:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .packages-list li span.iconify {
-            color: #67c23a;
-        }
-        
-        .package-name {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .package-desc {
-            color: #7f8c8d;
+        body.dark-mode code {
+            background: rgba(40, 40, 40, 0.8);
+            color: #f0f0f0;
         }
         
         .footer {
@@ -168,6 +192,10 @@
             margin-top: 40px;
             color: #7f8c8d;
             font-size: 14px;
+        }
+        
+        body.dark-mode .footer {
+            color: #a0a0a0;
         }
         
         .btn {
@@ -222,11 +250,7 @@
             }
         }
         
-        .dark-mode {
-            display: none;
-        }
-        
-        .dark-mode-label {
+        .theme-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -242,12 +266,12 @@
             z-index: 100;
         }
         
-        .dark-mode-label .iconify {
+        .theme-toggle .iconify {
             color: white;
             font-size: 14px;
         }
         
-        .dark-mode-label::before {
+        .theme-toggle::before {
             content: '';
             position: absolute;
             width: 18px;
@@ -258,51 +282,179 @@
             transition: all 0.3s ease;
         }
         
-        .dark-mode:checked ~ .dark-mode-label::before {
+        body.dark-mode .theme-toggle::before {
             transform: translateX(26px);
         }
         
-        /* Dark mode styles */
-        .dark-mode:checked ~ body {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
-            color: #f0f0f0;
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 80px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 12px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        .dark-mode:checked ~ body .card {
-            background: rgba(30, 30, 30, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body.dark-mode .language-toggle {
+            background: rgba(30, 30, 30, 0.9);
         }
         
-        .dark-mode:checked ~ body h1,
-        .dark-mode:checked ~ body h2,
-        .dark-mode:checked ~ body .package-name {
-            color: #f0f0f0;
+        .language-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
         
-        .dark-mode:checked ~ body .subtitle,
-        .dark-mode:checked ~ body .package-desc,
-        .dark-mode:checked ~ body .footer {
-            color: #a0a0a0;
+        .language-flag {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
         }
         
-        .dark-mode:checked ~ body pre,
-        .dark-mode:checked ~ body .packages-list li {
-            background: rgba(40, 40, 40, 0.8);
-            color: #f0f0f0;
+        .language-name {
+            font-size: 14px;
+            font-weight: 500;
         }
         
-        .dark-mode:checked ~ body code {
-            background: rgba(40, 40, 40, 0.8);
-            color: #f0f0f0;
+        .hljs {
+            border-radius: 8px;
+            padding: 20px !important;
+        }
+        
+        .hljs-comment {
+            font-weight: bold !important;
+            color: #228B22 !important;
+            font-style: italic;
+        }
+        
+        body.dark-mode .hljs-comment {
+            color: #7fba7f !important;
+        }
+        
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(64, 158, 255, 0.1);
+            color: #409eff;
+            border: 1px solid #409eff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #409eff;
+            color: white;
+        }
+        
+        body.dark-mode .copy-btn {
+            background: rgba(64, 158, 255, 0.2);
+            color: #66b1ff;
+            border-color: #66b1ff;
+        }
+        
+        body.dark-mode .copy-btn:hover {
+            background: #66b1ff;
+            color: white;
+        }
+        
+        .minimal-packages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .package-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(64, 158, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .package-badge:hover {
+            background: rgba(64, 158, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        body.dark-mode .package-badge {
+            background: rgba(64, 158, 255, 0.15);
+        }
+        
+        body.dark-mode .package-badge:hover {
+            background: rgba(64, 158, 255, 0.25);
+        }
+        
+        .package-badge .iconify {
+            color: #409eff;
+            font-size: 18px;
+        }
+        
+        .support-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .support-buttons .btn {
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        @media (max-width: 600px) {
+            .language-toggle {
+                right: 70px;
+                padding: 6px 10px;
+            }
+            
+            .language-name {
+                display: none;
+            }
+            
+            .minimal-packages {
+                gap: 10px;
+            }
+            
+            .package-badge {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <input type="checkbox" id="dark-mode-toggle" class="dark-mode">
-    <label for="dark-mode-toggle" class="dark-mode-label">
+    <div class="theme-toggle" id="theme-toggle">
         <span class="iconify" data-icon="mdi:weather-sunny"></span>
         <span class="iconify" data-icon="mdi:weather-night"></span>
-    </label>
+    </div>
+    
+    <div class="language-toggle" id="language-toggle">
+        <div class="language-flag" id="language-flag">PL</div>
+        <div class="language-name" id="language-name">Polski</div>
+    </div>
     
     <div class="background">
         <div class="shape shape-1"></div>
@@ -313,110 +465,242 @@
         <div class="header">
             <div class="logo">
                 <span class="iconify logo-icon" data-icon="mdi:server-network"></span>
-                <h1>NAS Debian Repository</h1>
-                <p class="subtitle">Repozytorium aplikacji dla serwerów NAS</p>
+                <h1 id="main-title">NAS Debian Repository</h1>
+                <p class="subtitle" id="main-subtitle">Repozytorium aplikacji dla serwerów NAS</p>
+            </div>
+        </div>
+        
+        <!-- Minimalistyczne pakiety -->
+        <div class="minimal-packages">
+            <div class="package-badge">
+                <span class="iconify" data-icon="mdi:web"></span>
+                <span>nas-panel</span>
+            </div>
+            <div class="package-badge">
+                <span class="iconify" data-icon="mdi:server"></span>
+                <span>nas-webserver</span>
+            </div>
+            <div class="package-badge">
+                <span class="iconify" data-icon="mdi:harddisk"></span>
+                <span>nas-storage</span>
+            </div>
+            <div class="package-badge">
+                <span class="iconify" data-icon="mdi:security"></span>
+                <span>nas-backup</span>
+            </div>
+            <div class="package-badge">
+                <span class="iconify" data-icon="mdi:database"></span>
+                <span>nas-database</span>
+            </div>
+            <div class="package-badge">
+                <span class="iconify" data-icon="mdi:backup-restore"></span>
+                <span>nas-sync</span>
             </div>
         </div>
         
         <div class="card">
-            <h2><span class="iconify" data-icon="mdi:download"></span> Instalacja</h2>
-            <p>Aby dodać repozytorium do swojego systemu, wykonaj poniższe polecenia:</p>
+            <h2><span class="iconify" data-icon="mdi:download"></span> <span id="installation-title">Instalacja</span></h2>
+            <p id="installation-desc">Aby dodać repozytorium do swojego systemu, wykonaj poniższe polecenia:</p>
             
-            <pre># Dodaj klucz GPG
-wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -
-
-# Dodaj repozytorium
-echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | \
-sudo tee /etc/apt/sources.list.d/nas-repo.list
-
-# Aktualizuj i instaluj
-sudo apt update
-sudo apt install nas-panel nas-webserver</pre>
+            <div class="command-block">
+                <div class="command-title">
+                    <span class="iconify" data-icon="mdi:key-chain"></span>
+                    <span id="command1-title">Dodaj klucz GPG</span>
+                </div>
+                <pre><code class="language-bash">wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -', this)">
+                    <span class="iconify" data-icon="mdi:content-copy" style="font-size: 14px;"></span>
+                    <span class="copy-text" data-pl="Kopiuj" data-en="Copy">Kopiuj</span>
+                </button>
+            </div>
             
-            <a href="#" class="btn" onclick="copyCommands()">
+            <div class="command-block">
+                <div class="command-title">
+                    <span class="iconify" data-icon="mdi:package"></span>
+                    <span id="command2-title">Dodaj repozytorium</span>
+                </div>
+                <pre><code class="language-bash">echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('echo \"deb [arch=amd64] https://repo.naspanel.site/ stable main\" | sudo tee /etc/apt/sources.list.d/nas-repo.list', this)">
+                    <span class="iconify" data-icon="mdi:content-copy" style="font-size: 14px;"></span>
+                    <span class="copy-text" data-pl="Kopiuj" data-en="Copy">Kopiuj</span>
+                </button>
+            </div>
+            
+            <div class="command-block">
+                <div class="command-title">
+                    <span class="iconify" data-icon="mdi:update"></span>
+                    <span id="command3-title">Aktualizuj i instaluj</span>
+                </div>
+                <pre><code class="language-bash">sudo apt update
+sudo apt install nas-panel nas-webserver</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('sudo apt update\nsudo apt install nas-panel nas-webserver', this)">
+                    <span class="iconify" data-icon="mdi:content-copy" style="font-size: 14px;"></span>
+                    <span class="copy-text" data-pl="Kopiuj" data-en="Copy">Kopiuj</span>
+                </button>
+            </div>
+            
+            <a href="#" class="btn" onclick="copyAllCommands()">
                 <span class="iconify" data-icon="mdi:content-copy"></span>
-                Kopiuj polecenia
+                <span id="copy-all-text" data-pl="Kopiuj wszystkie polecenia" data-en="Copy all commands">Kopiuj wszystkie polecenia</span>
             </a>
         </div>
         
         <div class="card">
-            <h2><span class="iconify" data-icon="mdi:package-variant"></span> Dostępne pakiety</h2>
-            <ul class="packages-list">
-                <li>
-                    <span class="iconify" data-icon="mdi:web"></span>
-                    <div>
-                        <div class="package-name">nas-panel</div>
-                        <div class="package-desc">Panel zarządzania serwerem NAS przez przeglądarkę</div>
-                    </div>
-                </li>
-                <li>
-                    <span class="iconify" data-icon="mdi:server"></span>
-                    <div>
-                        <div class="package-name">nas-webserver</div>
-                        <div class="package-desc">Lekki serwer WWW zoptymalizowany dla systemów NAS</div>
-                    </div>
-                </li>
-                <li>
-                    <span class="iconify" data-icon="mdi:harddisk"></span>
-                    <div>
-                        <div class="package-name">nas-storage</div>
-                        <div class="package-desc">Narzędzia do zarządzania przestrzenią dyskową</div>
-                    </div>
-                </li>
-                <li>
-                    <span class="iconify" data-icon="mdi:security"></span>
-                    <div>
-                        <div class="package-name">nas-backup</div>
-                        <div class="package-desc">Zaawansowane narzędzia do tworzenia kopii zapasowych</div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        
-        <div class="card">
-            <h2><span class="iconify" data-icon="mdi:help-circle"></span> Wsparcie</h2>
-            <p>Jeśli napotkasz problemy z instalacją lub korzystaniem z repozytorium, skorzystaj z następujących opcji:</p>
-            <br>
-            <a href="#" class="btn">
-                <span class="iconify" data-icon="mdi:book-open"></span>
-                Dokumentacja
-            </a>
-            <a href="#" class="btn btn-secondary">
-                <span class="iconify" data-icon="mdi:github"></span>
-                GitHub
-            </a>
-            <a href="#" class="btn btn-secondary">
-                <span class="iconify" data-icon="mdi:forum"></span>
-                Forum
-            </a>
+            <h2><span class="iconify" data-icon="mdi:help-circle"></span> <span id="support-title">Wsparcie</span></h2>
+            <p id="support-desc">Jeśli napotkasz problemy z instalacją lub korzystaniem z repozytorium, skorzystaj z następujących opcji:</p>
+            
+            <div class="support-buttons">
+                <a href="#" class="btn">
+                    <span class="iconify" data-icon="mdi:book-open"></span>
+                    <span id="documentation-text" data-pl="Dokumentacja" data-en="Documentation">Dokumentacja</span>
+                </a>
+                <a href="https://github.com/gekomod/nas-panel" class="btn btn-secondary">
+                    <span class="iconify" data-icon="mdi:github"></span>
+                    GitHub
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    <span class="iconify" data-icon="mdi:forum"></span>
+                    <span id="forum-text" data-pl="Forum" data-en="Forum">Forum</span>
+                </a>
+            </div>
         </div>
         
         <div class="footer">
-            <p>© 2023 NAS Panel Project. Wszystkie prawa zastrzeżone.</p>
+            <p>© 2025 <span id="footer-text" data-pl="NAS Panel Project. Wszystkie prawa zastrzeżone." data-en="NAS Panel Project. All rights reserved.">NAS Panel Project. Wszystkie prawa zastrzeżone.</span></p>
         </div>
     </div>
 
     <script>
-        function copyCommands() {
+        // Tłumaczenia
+        const translations = {
+            pl: {
+                mainTitle: "NAS Debian Repository",
+                mainSubtitle: "Repozytorium aplikacji dla serwerów NAS",
+                installationTitle: "Instalacja",
+                installationDesc: "Aby dodać repozytorium do swojego systemu, wykonaj poniższe polecenia:",
+                command1Title: "Dodaj klucz GPG",
+                command2Title: "Dodaj repozytorium",
+                command3Title: "Aktualizuj i instaluj",
+                supportTitle: "Wsparcie",
+                supportDesc: "Jeśli napotkasz problemy z instalacją lub korzystaniem z repozytorium, skorzystaj z następujących opcji:",
+                copyAll: "Kopiuj wszystkie polecenia",
+                documentation: "Dokumentacja",
+                forum: "Forum",
+                footer: "NAS Panel Project. Wszystkie prawa zastrzeżone.",
+                copy: "Kopiuj",
+                languageName: "Polski"
+            },
+            en: {
+                mainTitle: "NAS Debian Repository",
+                mainSubtitle: "Application repository for NAS servers",
+                installationTitle: "Installation",
+                installationDesc: "To add the repository to your system, execute the following commands:",
+                command1Title: "Add GPG key",
+                command2Title: "Add repository",
+                command3Title: "Update and install",
+                supportTitle: "Support",
+                supportDesc: "If you encounter problems with installation or using the repository, use the following options:",
+                copyAll: "Copy all commands",
+                documentation: "Documentation",
+                forum: "Forum",
+                footer: "NAS Panel Project. All rights reserved.",
+                copy: "Copy",
+                languageName: "English"
+            }
+        };
+
+        let currentLanguage = 'pl';
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Aktualizuj teksty
+            document.getElementById('main-title').textContent = translations[lang].mainTitle;
+            document.getElementById('main-subtitle').textContent = translations[lang].mainSubtitle;
+            document.getElementById('installation-title').textContent = translations[lang].installationTitle;
+            document.getElementById('installation-desc').textContent = translations[lang].installationDesc;
+            document.getElementById('command1-title').textContent = translations[lang].command1Title;
+            document.getElementById('command2-title').textContent = translations[lang].command2Title;
+            document.getElementById('command3-title').textContent = translations[lang].command3Title;
+            document.getElementById('support-title').textContent = translations[lang].supportTitle;
+            document.getElementById('support-desc').textContent = translations[lang].supportDesc;
+            document.getElementById('copy-all-text').textContent = translations[lang].copyAll;
+            document.getElementById('documentation-text').textContent = translations[lang].documentation;
+            document.getElementById('forum-text').textContent = translations[lang].forum;
+            document.getElementById('footer-text').textContent = translations[lang].footer;
+            document.getElementById('language-name').textContent = translations[lang].languageName;
+            
+            // Aktualizuj teksty przycisków kopiowania
+            document.querySelectorAll('.copy-text').forEach(el => {
+                el.textContent = translations[lang].copy;
+            });
+            
+            // Aktualizuj flagę języka
+            document.getElementById('language-flag').textContent = lang.toUpperCase();
+            
+            // Zapisz wybór języka
+            localStorage.setItem('language', lang);
+            
+            // Zmień atrybut lang w html
+            document.documentElement.lang = lang;
+        }
+
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.querySelector('.copy-text').innerHTML;
+                button.querySelector('.copy-text').innerHTML = currentLanguage === 'pl' ? 'Skopiowano!' : 'Copied!';
+                setTimeout(() => {
+                    button.querySelector('.copy-text').innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Błąd podczas kopiowania: ', err);
+            });
+        }
+        
+        function copyAllCommands() {
             const commands = `wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -\necho "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list\nsudo apt update\nsudo apt install nas-panel nas-webserver`;
             
             navigator.clipboard.writeText(commands).then(() => {
-                alert('Polecenia zostały skopiowane do schowka!');
+                alert(currentLanguage === 'pl' ? 'Wszystkie polecenia zostały skopiowane do schowka!' : 'All commands have been copied to clipboard!');
             }).catch(err => {
                 console.error('Błąd podczas kopiowania: ', err);
             });
         }
         
         // Obsługa trybu ciemnego
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
         
-        if (prefersDarkScheme.matches) {
-            darkModeToggle.checked = true;
+        // Sprawdź zapisany tryb lub preferencje systemowe
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && prefersDarkScheme.matches)) {
+            document.body.classList.add('dark-mode');
         }
         
-        darkModeToggle.addEventListener('change', function() {
-            document.body.classList.toggle('dark-mode-active', this.checked);
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+        
+        // Obsługa zmiany języka
+        const languageToggle = document.getElementById('language-toggle');
+        
+        // Sprawdź zapisany język lub ustaw domyślny
+        const savedLanguage = localStorage.getItem('language') || 'pl';
+        changeLanguage(savedLanguage);
+        
+        languageToggle.addEventListener('click', function() {
+            const newLanguage = currentLanguage === 'pl' ? 'en' : 'pl';
+            changeLanguage(newLanguage);
+        });
+        
+        // Ponowne uruchomienie podświetlania składni po zmianie trybu
+        themeToggle.addEventListener('click', function() {
+            setTimeout(() => {
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }, 100);
         });
     </script>
 </body>

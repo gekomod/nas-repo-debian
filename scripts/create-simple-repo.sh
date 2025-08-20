@@ -95,19 +95,20 @@ gpg --default-key "$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cu
 gpg --clearsign -o InRelease Release
 cd ../..
 
-# Utwórz instrukcję instalacji
-echo "📝 Creating installation instructions..."
+
+# ✅ DODAJ INSTRUKCJĘ INSTALACJI (KEY.gpg już jest w root)
+echo "📝 Adding installation instructions..."
 cat > INSTALL.md << EOF
 # 📦 NAS Repository Installation
 
 ## 🔐 Add GPG Key
 \`\`\`bash
-wget -qO - https://${{ github.repository_owner }}.github.io/${{ github.repository }}/KEY.gpg | sudo apt-key add -
+wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -
 \`\`\`
 
 ## 📁 Add Repository
 \`\`\`bash
-echo "deb [arch=amd64] https://${{ github.repository_owner }}.github.io/${{ github.repository }}/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list
+echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list
 \`\`\`
 
 ## 🔄 Update & Install
@@ -115,6 +116,10 @@ echo "deb [arch=amd64] https://${{ github.repository_owner }}.github.io/${{ gith
 sudo apt update
 sudo apt install nas-panel nas-web
 \`\`\`
+
+## 🔑 GPG Key ID: $KEY_ID
 EOF
 
-echo "✅ Repository created successfully with proper structure!"
+echo "✅ Signed repository created successfully!"
+echo "🔑 GPG Key ID: $KEY_ID"
+echo "📁 KEY.gpg is in repository root"

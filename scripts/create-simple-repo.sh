@@ -18,7 +18,7 @@ echo "📦 Creating Packages file with CORRECT paths..."
 if command -v dpkg-scanpackages >/dev/null 2>&1; then
     # Użyj dpkg-scanpackages z właściwym katalogiem bazowym
     cd pool/main
-    dpkg-scanpackages . /dev/null > ../../../../dists/stable/main/binary-amd64/Packages 2>/dev/null
+    dpkg-scanpackages . /dev/null > ../../dists/stable/main/binary-amd64/Packages 2>/dev/null
     cd ../../../../dists/stable/main/binary-amd64
     gzip -9c Packages > Packages.gz
     cd ../../../../

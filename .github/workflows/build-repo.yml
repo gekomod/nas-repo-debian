@@ -5,7 +5,6 @@ on:
     branches: [ main ]
     paths:
       - 'pool/**'
-      - 'scripts/**'
   workflow_dispatch:
 
 env:
@@ -21,8 +20,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Setup GPG keys
       id: setup-keys
@@ -34,17 +31,17 @@ jobs:
           KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
           echo "key-id=$KEY_ID" >> $GITHUB_OUTPUT
         else
-          # Generuj nowy klucz
+          # Generuj nowy klucz - użyj podwójnego % dla escape'owania
           echo "🔐 Generating new GPG key..."
           gpg --batch --generate-key <<'EOF'
-          Key-Type: RSA
-          Key-Length: 4096
-          Name-Real: NAS Repository
-          Name-Email: nas-repo@users.noreply.github.com
-          Expire-Date: 0
-          %no-protection
-          %commit
-          EOF
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: NAS Repository
+Name-Email: nas-repo@users.noreply.github.com
+Expire-Date: 0
+%%no-protection
+%%commit
+EOF
           
           KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
           gpg --armor --export "$KEY_ID" > KEY.gpg
@@ -58,8 +55,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Install required tools
       run: |
@@ -77,38 +72,38 @@ jobs:
       run: |
         mkdir -p conf
         cat > conf/distributions << EOF
-        Origin: NAS Repository
-        Label: NAS Debian Repository
-        Codename: ${{ env.DIST }}
-        Architectures: ${{ env.ARCH }}
-        Components: ${{ env.COMPONENT }}
-        Description: Repository for NAS applications
-        SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
-        EOF
+Origin: NAS Repository
+Label: NAS Debian Repository
+Codename: $DIST
+Architectures: $ARCH
+Components: $COMPONENT
+Description: Repository for NAS applications
+SignWith: ${{ needs.setup-gpg.outputs.gpg-key-id }}
+EOF
 
         cat > conf/options << EOF
-        basedir $(pwd)
-        EOF
+basedir $(pwd)
+EOF
 
     - name: Find and add all packages
       run: |
         # Znajdź wszystkie pliki .deb w pool
         find pool -name "*.deb" | while read deb_file; do
           echo "📦 Adding package: $deb_file"
-          reprepro includedeb ${{ env.DIST }} "$deb_file"
+          reprepro includedeb $DIST "$deb_file"
         done
 
     - name: Export and sign repository
       run: |
-        reprepro export ${{ env.DIST }}
+        reprepro export $DIST
         
         # Sprawdź podpis
-        cd dists/${{ env.DIST }}
+        cd dists/$DIST
         gpg --verify Release.gpg Release
 
     - name: List all packages in repository
       run: |
-        reprepro list ${{ env.DIST }}
+        reprepro list $DIST
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
@@ -116,7 +111,6 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: .
         keep_files: true
-        exclude_assets: '*.deb,pool/**'
 
     - name: Verify deployment
       run: |

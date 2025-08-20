@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAS Debian Repository</title>
+</head>
+<body>
+    <h1>NAS Debian Repository</h1>
+    <p>Repository for NAS applications</p>
+    
+    <h2>Installation</h2>
+    <pre>
+# Add GPG key
+wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -
+
+# Add repository
+echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | \
+sudo tee /etc/apt/sources.list.d/nas-repo.list
+
+# Update and install
+sudo apt update
+sudo apt install nas-panel nas-webserver
+    </pre>
+    
+    <h2>Available Packages</h2>
+    <ul>
+        <li>nas-panel - Web management panel</li>
+        <li>nas-webserver - Lightweight web server</li>
+    </ul>
+</body>
+</html>

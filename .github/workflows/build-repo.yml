@@ -19,12 +19,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gnupg
 
-      - name: Setup GPG key
+      - name: Setup GPG key from repository
         run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" > private.key
-          gpg --import private.key
-          KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-          echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+          # Sprawdź czy istnieje już klucz w repozytorium
+          if [ -f "KEY.gpg" ] && [ -f "private.key" ]; then
+            echo "✅ Using existing GPG keys from repository..."
+            gpg --import private.key
+            gpg --import KEY.gpg
+            KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+            echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+            echo "🔑 Using key ID: $KEY_ID"
+          else
+            echo "❌ No existing GPG keys found, generating new ones..."
+            gpg --batch --passphrase '' --quick-gen-key "NAS Repository <nas-repo@example.com>" rsa4096 default never
+            KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+            gpg --armor --export "$KEY_ID" > KEY.gpg
+            gpg --export-secret-keys --armor "$KEY_ID" > private.key
+            echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
+            echo "🔑 Generated new key ID: $KEY_ID"
+          fi
 
       - name: Create repository with correct paths
         run: |

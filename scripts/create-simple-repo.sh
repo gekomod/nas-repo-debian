@@ -66,3 +66,42 @@ gzip -9c Packages > Packages.gz
 cd ../../../../
 
 echo "✅ Packages file created with $(grep -c "^Package:" dists/stable/main/binary-amd64/Packages) packages"
+
+# Pobierz KEY_ID ze zmiennej środowiskowej (ustawionej w workflow)
+KEY_ID=${KEY_ID:-}
+if [ -z "$KEY_ID" ]; then
+    KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+fi
+
+echo "🔐 Using GPG key ID: $KEY_ID"
+
+# Utwórz Release z poprawnymi hashami
+echo "📄 Creating Release file..."
+cd dists/stable
+
+cat > Release << EOF
+Origin: NAS Repository
+Label: NAS Debian Repository
+Suite: stable
+Codename: stable
+Architectures: amd64
+Components: main
+Description: Repository for NAS applications
+Date: $(date -Ru)
+EOF
+
+# Dodaj hashe do Release
+echo "MD5Sum:" >> Release
+echo " $(md5sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
+
+echo "SHA256:" >> Release
+echo " $(sha256sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
+
+# Podpisz repozytorium
+echo "🔏 Signing repository..."
+gpg --default-key "$KEY_ID" -abs -o Release.gpg Release
+gpg --default-key "$KEY_ID" --clearsign -o InRelease Release
+
+cd ../../
+
+echo "✅ Repository created and signed successfully!"

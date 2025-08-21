@@ -44,15 +44,7 @@ cd dists/stable/main/binary-amd64
 # Użyj --multiversion i przekieruj output do pliku
 dpkg-scanpackages --multiversion ../../../../pool/main > Packages 2>/dev/null
 
-# Sprawdź czy nie ma duplikatów
-echo "🔍 Checking for duplicates..."
-duplicate_count=$(grep "^Package: " Packages | sort | uniq -d | wc -l)
-if [ "$duplicate_count" -gt 0 ]; then
-    echo "❌ Found $duplicate_count duplicate packages, removing duplicates..."
-    # Usuń duplikaty zachowując tylko pierwsze wystąpienie
-    awk '/^Package: / { if (!seen[$0]++) {print; while ((getline line) > 0) {if (line == "") {print line; break}; print line}} else {while ((getline line) > 0) {if (line == "") break}}}' Packages > Packages.tmp
-    mv Packages.tmp Packages
-fi
+
 
 # Kompresuj
 gzip -9c Packages > Packages.gz

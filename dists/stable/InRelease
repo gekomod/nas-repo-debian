@@ -1,0 +1,35 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Origin: NAS Repository
+Label: NAS Debian Repository
+Suite: stable
+Codename: stable
+Architectures: amd64
+Acquire-By-Hash: no
+APT-Sources: no
+Components: main
+Description: Repository for NAS applications
+Date: Thu, 21 Aug 2025 22:28:04 +0000
+MD5Sum:
+ 04efe509a7b50fc42b33ed51b9744f6b 2185 main/binary-amd64/Packages
+ 36945799a97ad1c9749747068b3e8fd7 840 main/binary-amd64/Packages.gz
+SHA256:
+ 8eb70f29c1d1fe95f7cff5079ee4a78d61a0738826bdfb4b72778c309a08a350 2185 main/binary-amd64/Packages
+ 1c60a225ad5577f855b0f346fa030ab9a97b06d4c7c84e86c38a2d076a2c8ff7 840 main/binary-amd64/Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEElKCt9Pd3DG+htGULZ+4uiwRpVGwFAminnXQACgkQZ+4uiwRp
+VGyBURAAjCrIVCB+6djV8M7YoGx3fjgrjDJt1DOK8riVtsKH6AWM9ZYv+kNaDLPB
+fGi2KhJvFV9nHEurSNt7fZVN9846BFII3dwSiXrW5nkNYkxx7cd7DoYm8bHtZeQq
+aHSY3auB54Ic8pquf8ralIkWwStOXvyCRJO3xQFkmUXp2rNcWzNgzINsIFW0lhQh
+Edj/4cO1GLlJEe2ww0xz7mjDIJEdAy8ROtQazyrKSPBzjgpPfNb2g5r7l69Rm/mp
+nchLxB2yxgd5xfamJ4s4m3kL/04iL4gUwwVJbYTelS/9gAXbR2bQMVyDWkSMASI0
+aRIn0VY6oZS7mfIvBLgnsc4xL9E5Otm2tINsTFse+jjdFQUACrj/IT0W2JFfgeTF
+6LBTQdW27uiHdjpewrOI2IAP/oS7Szc+cwvfL4fYso30ZeYC1Sr3BfiAoYzu141E
+eC/Aj6J8eCJcNqFZVW/SdKDZJKLztS/w0S7UlgYdVne4M61KJTFWQxJyo7hJBKJf
+dXiD/+K68wkRUqTdvESo4HIVVE0rTX20/qtgvyjtA0eVL19YUCndc2y7WARZ+xSR
+5i2v+N9ANN7gyoWxIDFKaCljvdNybbCOAcXflyU3gzI6ApYNxa73GqRcbIrXFqPT
+z5fc87WMaCHOpdyR1SO2i4mKssIwxxMXYPm0k1FBHKgjhEx5yWY=
+=xBbf
+-----END PGP SIGNATURE-----

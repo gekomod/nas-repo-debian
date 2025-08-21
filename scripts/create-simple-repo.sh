@@ -31,7 +31,7 @@ for deb in ../../../../pool/main/*.deb; do
         echo "Package: $pkg_name" >> Packages
         echo "Version: $pkg_version" >> Packages
         echo "Architecture: $pkg_arch" >> Packages
-        echo "Filename: pool/main/$filename" >> Packages  # PRAWIDŁOWA ŚCIEŻKA!
+        echo "Filename: pool/main/$filename" >> Packages
         echo "Size: $(stat -c%s "$deb")" >> Packages
         echo "SHA256: $(sha256sum "$deb" | cut -d' ' -f1)" >> Packages
         echo "MD5sum: $(md5sum "$deb" | cut -d' ' -f1)" >> Packages
@@ -51,31 +51,20 @@ echo "✅ Packages file created with correct paths"
 # SPRAWDŹ CZY KLUCZ GPG JUŻ ISTNIEJE I GO UŻYJ LUB UTWÓRZ NOWY
 echo "🔐 Setting up GPG signing..."
 
-if [ -f "KEY.gpg" ]; then
-    echo "✅ Using existing GPG key: KEY.gpg"
-    # Importuj istniejący klucz
-    gpg --import KEY.gpg >/dev/null 2>&1
+if [ -f "KEY.gpg" ] && [ -f "private.key" ]; then
+    echo "✅ Using existing GPG key..."
+    # Importuj istniejący klucz prywatny
+    gpg --import private.key >/dev/null 2>&1
     KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
     echo "🔑 Using existing key ID: $KEY_ID"
 else
     echo "🔑 Generating new GPG key..."
-    # Generuj nowy klucz
-    cat > /tmp/gpg-gen.conf << EOF
-Key-Type: RSA
-Key-Length: 4096
-Name-Real: NAS Repository
-Name-Email: nas-repo@example.com
-Expire-Date: 0
-%no-protection
-%commit
-EOF
+    gpg --batch --passphrase '' --quick-gen-key "NAS Repository <nas-repo@example.com>" rsa4096 default never
     
-    gpg --batch --generate-key /tmp/gpg-gen.conf
-    rm /tmp/gpg-gen.conf
-    
-    # Eksportuj klucz publiczny
+    # Eksportuj klucze
     KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
     gpg --armor --export "$KEY_ID" > KEY.gpg
+    gpg --export-secret-keys --armor "$KEY_ID" > private.key
     echo "✅ Generated new GPG key: $KEY_ID"
 fi
 
@@ -117,12 +106,12 @@ cat > INSTALL.md << EOF
 
 ## 🔐 Add GPG Key
 \`\`\`bash
-wget -qO - https://DOMAIN/KEY.gpg | sudo apt-key add -
+wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -
 \`\`\`
 
 ## 📁 Add Repository
 \`\`\`bash
-echo "deb [arch=amd64] https://DOMAIN/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list
+echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list
 \`\`\`
 
 ## 🔄 Update & Install

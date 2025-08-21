@@ -8,24 +8,24 @@ Codename: stable
 Architectures: amd64
 Components: main
 Description: Repository for NAS applications
-Date: Thu, 21 Aug 2025 20:09:35 +0000
+Date: Thu, 21 Aug 2025 20:20:12 +0000
 MD5Sum:
- 0e01855abd9776bcf21d251fe2ff6aad 1244 main/binary-amd64/Packages.gz
+ 2635ab8a51049583cb9135a83b36a5a4 840 main/binary-amd64/Packages.gz
 SHA256:
- 6dbddaaa2d86f41c0c0fa46d0167442ec1aeb55325d8c174d7448e051734801f 1244 main/binary-amd64/Packages.gz
+ 5fdcc9a11c2273d8fe74ceb14d5aa1b2076bb2fb2a5ecbf86fefdd86010cb3d5 840 main/binary-amd64/Packages.gz
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEQ9l2PSrjUCY0iUOpeGJNxNeWCr8FAminfP8ACgkQeGJNxNeW
-Cr8mxA//VnId9vk7ZOTO14mU82Y3gWPZqNzPAOwKEft00G3Jzo1JXGI9Zv0KlvnX
-ykdvh4tZ2GXJKF/av7YFgsvkVK1ju+9sbm1Ef5wZgScfmFmIYPSqLurS7k9nOa0/
-U+2+J4zWDEG8V0heOKjGv/JD7Qbjwnu02W4VxFQJRwb8uW4GdJ5eV41ORMLFTOuh
-4ZSxDrXPkcCfFWQwy3ND7N6U7ZIP7YlNKqd9AcZgvtN0twVIsVmhzVHkqWoh7r8A
-6yEigVCPmOjx5CR92ydFyY8LvkNrnDkzflQjaodoPBWkfgqgsFglzts1xxnIGuJ7
-3LE8PpOIY95tjfcmbtiXCit6SPc45hfzZtE3GkKlh2yyb0zurJxNQYfkxT98P81q
-J7ALjpsQNwooQF53tG/MY52mQdS0j1pRISWY+STLkHqH3jlXHNkG71afJVTNQyVW
-r5gQQdPotnsz0fYY1O2ON07Llba7pGBZIuZ5WXqWp3dVlhifLd9cLQfrB+7AU/x6
-MRzMaBsPHt1nPY1Ew7DkmoYukEQkNIDkg3d+LUonICzhBtXKWtWZE2UgmHh45CQB
-9XxZOOx0y/qj9CNL/AwsJXIkHn1o8kX38qkx4Pu42lDnI3DVI6U1DasTkLo/eqP9
-ufci2/soMZEuCKUKjJUYBjWDjOdLof5aoqgx29xFtFuoXCDHmdM=
-=AHuR
+iQIzBAEBCgAdFiEElKCt9Pd3DG+htGULZ+4uiwRpVGwFAminf30ACgkQZ+4uiwRp
+VGzRxRAArriXen5WHK/pTqBjaZm4qrwc4te1MzxVm6NtcISLFiaAEQfMxMv04pnL
+V/NWMQ9Go/vc9JIrFX8W32+2yhUANF9wHqmpl01lbRp7ybbldiaLGtK/Hjm58llS
+8w1nWq6uF7JfUFFlRaflPbJRn1OpRF3ua8abJgbsiWcmipjbJaiHdg1RE3gt4Gyk
+fBDzE+vOoA1MD3wYNQM0cU8R1hYvZqSLMaHcYWU+cc5GH1xW3gd2E7yGAR6UAw5t
+Weq1JvnY8XTUDQp60usR8aCedesEoddMel+o1YkAcPYp2swPp6mZligV9cSCR1H8
+jbxqFtxiOoIDOjOr0WJUybt58TPSlnwOeD/dMdDcOxPfZeLXcGme6IlBWgSQJwi5
+tHtyEtE8Mf49GqaE3GOAoTr3hbKAjxtVx6NJxMNtgUljtmmg6I1mqvRoSKRfCquC
+oIAliDl/y2XXRkQGGchR9PPtWloC4TzErMKXDDhE0dwLJs8BbFQiUSxKqMU/+eUi
+Vrrjepx6XifknSFHiCxArmLlUYydSvfA6pN02L7K6vwaK/wuqWi/xSnyNc2jQ5LU
+21RPa/fFGG3XjPPUD9As2uFaWIFNHoi38MN82CvNoTQ9JT7z0qDdenVdv/ZJV+yL
+Geeta+XqaLvgMlURk2LFEqW1sLoUpr0jBKhh3mJRNWi6GKEj8fE=
+=aava
 -----END PGP SIGNATURE-----

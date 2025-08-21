@@ -8,24 +8,28 @@ Codename: stable
 Architectures: amd64
 Components: main
 Description: Repository for NAS applications
-Date: Thu, 21 Aug 2025 19:10:07 +0000
+Date: Thu, 21 Aug 2025 19:44:54 +0000
 MD5Sum:
- 0f58b34b9e1a95eda70910e64efa6a4a 461 main/binary-amd64/Packages.gz
+ 1f6d82b08124ca26415512d90f6f9160 212 Release
+ dbae437149bf7e3c4212947733df1952 1244 main/binary-amd64/Packages.gz
+ 8dcfbbb6675e4886122f74d468e7b7c5 7218 main/binary-amd64/Packages
 SHA256:
- f2a2ae80609364358e9ec15215952de628ed8e9f778509854942eb92d9e9cb58 461 main/binary-amd64/Packages.gz
+ 461443f608de0e7bb50f76fdf45259b70a3a2608d464bbcc4ae353bfd331dfdb 401 Release
+ a87660f860e1222d43e8819c6003973ebf5c3f4c72a513a8d30ad9e379d5534f 1244 main/binary-amd64/Packages.gz
+ 6ffb22595b4446f5f6fa547b4d870cd02c06717c293b35ca45dfa203f35c1937 7218 main/binary-amd64/Packages
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEU1vv3Tfi2HviS1nGorPrzxOHcDYFAminbw8ACgkQorPrzxOH
-cDYcag/9G/N0OSUhUk7Vy2GRV9KkG2SdL3Ib2w8nzav+VjRQREcGKMqaeH8LnIqD
-XQr0Lgfx6dUy4Uv1JmlaS1gSwRudYw6+paIEWJgqRv7SwyDnhHNi+oKXiF9HV+i+
-Y4GSAeHWB86E7amOTlPilBUwudaADv8xeXOgaxT7CwRIlCp96phqv3a3nMtv6P1L
-qccYIFeaxQUNTpzrwXtv4lF18wTkbge6F106U09zMSaZKN9bYjpbExpTkDKeWysg
-lbdh5PoKjZS+mFpfjki+aWXOodma+1RhWCeBdBapmaGblgTyi6ifxHpoGyGSdu0C
-qqk8IAT40k40qgw287iQotQLnuhaTgubrjAHtLtNLYUTVyiungQs3xm4JkYTTaFU
-2S07BpD0hBdAKnSLivRyTJIa+mvtbaq7zhnvgqnmHEfnu8w7YvmJQ+RpxGvc0aBd
-Is35pkOXTow4GB8WxMFPkGtx4jmwvdOwbB8QlXgUc/O5PVzo57INiuRL7aZtpNYp
-42yuSLdHt094lVpscX3B3gnnCVwbqGO2LKDzvv5BuoBFN3PJSe7dOhCcLiHPxpIV
-CGoFrXwM6fhZEqBFzgOE0F44C1caCigCEDJbFFWWvLPNDno5vTqT8To+4Zx86FXJ
-UhJEweuncqighablAy16+BuNwJBlmwxKGQFyUyZmi1qdecBFb5c=
-=Da2M
+iQIzBAEBCgAdFiEEoXVk4Zsl8mgOSNkT89xzKKx9qKwFAmindzYACgkQ89xzKKx9
+qKyjnw/+JzkpZMBALH3rKit0CKRZVlMCClh3btsRLMZA5ezGgGXWh016ixKzltOO
+1m2YwM/SarYmSaMLlFWFkEAEx2SqOfykHXmak8g/MjN0YaqB4IBezChf3N+1nsxw
+sDCPMMIx+/g1IWwWaZqusFjmShTyWro+KVoqsdBeWydH5gEVWMZflI3eKFwuKQZu
+xcPbK7uT5ktARq9fHRwSaHRBZv1EBR2zBHKH/AoJ7T4v+20iTLJnyg8ycTgrXH3Q
+uSHo8PqUq2RUvrCaAMWmPmkug5+wdRzsyTrZuOVDHcqE82x1ESNF08z0+Y/XpXTQ
+YY/b3xSgExPl+wiZErzFbgnIhObTuTfEWam9GUOjFbwC9I74rQHdWUvBTtSc/fYb
+Paxzpo+KihTN39KH8lpnkeBGLz4WqkKxr25OVvVJIAqg3oWOoPEkdfXERWoxMAvM
+sznStc8zXUonNJcHfNiJeLrxOc+yHLMWZaLCUW8ETSc+ndPOewTLNVJIx73gyN43
+dQl6z7TXaG3exK4dvhp/RIb+EqQeP94faWClXD8oYw/PKFMU+J2BMuNG+EDSptag
++zoshlnd+1DbdQSfjHxK670O/VLO+OPh9HNlqNBqa9EdIj3wU6iNNIuGkG5pQV+3
+A/vss08KSG2Fd3GjQI0ZjKVbrtDAPkeuRDop8RwfvCUDErXzjr8=
+=JmD1
 -----END PGP SIGNATURE-----

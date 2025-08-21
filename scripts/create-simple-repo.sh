@@ -38,7 +38,7 @@ sudo apt-get install -y dpkg-dev
 cd dists/stable/main/binary-amd64
 
 # Wyczyść stary plik Packages
-> Packages
+rm -fr Packages
 
 # Użyj dpkg-scanpackages aby poprawnie wygenerować plik Packages
 # Użyj --multiversion i przekieruj output do pliku

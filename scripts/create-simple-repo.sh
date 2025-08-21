@@ -133,6 +133,8 @@ Label: NAS Debian Repository
 Suite: stable
 Codename: stable
 Architectures: amd64
+Acquire-By-Hash: no
+APT-Sources: no
 Components: main
 Description: Repository for NAS applications
 Date: $(date -Ru)

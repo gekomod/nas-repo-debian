@@ -1,5 +1,5 @@
 #!/bin/bash
-# create-simple-repo.sh - Ręczne tworzenie POPRAWNEGO pliku Packages
+# create-simple-repo.sh - Ręczne tworzenie POPRAWNEGO pliku Packages z pobieraniem klucza GPG
 
 set -e
 
@@ -67,16 +67,38 @@ cd ../../../../
 
 echo "✅ Packages file created with $(grep -c "^Package:" dists/stable/main/binary-amd64/Packages) packages"
 
-# Pobierz KEY_ID ze zmiennej środowiskowej (ustawionej w workflow)
-KEY_ID=${KEY_ID:-}
-if [ -z "$KEY_ID" ]; then
+# POBIRZ KLUCZ GPG Z REPOZYTORIUM
+echo "🔐 Downloading GPG key from https://repo.naspanel.site/KEY.gpg..."
+KEY_FILE="/tmp/repo-key.gpg"
+
+# Pobierz klucz
+if wget -q -O "$KEY_FILE" https://repo.naspanel.site/KEY.gpg; then
+    echo "✅ GPG key downloaded successfully"
+    
+    # Importuj klucz
+    if gpg --import "$KEY_FILE"; then
+        # Pobierz KEY_ID
+        KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+        echo "🔑 Using GPG key ID: $KEY_ID"
+        
+        # Trust the key
+        echo "$KEY_ID:6:" | gpg --import-ownertrust
+    else
+        echo "❌ Failed to import GPG key, generating new one..."
+        # Generuj nowy klucz jeśli import się nie powiódł
+        gpg --batch --passphrase '' --quick-gen-key "NAS Repository <nas-repo@example.com>" rsa4096 default never
+        KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+        echo "🔑 Generated new GPG key ID: $KEY_ID"
+    fi
+else
+    echo "❌ Failed to download GPG key, generating new one..."
+    # Generuj nowy klucz jeśli pobieranie się nie powiodło
+    gpg --batch --passphrase '' --quick-gen-key "NAS Repository <nas-repo@example.com>" rsa4096 default never
     KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+    echo "🔑 Generated new GPG key ID: $KEY_ID"
 fi
 
-echo "🔐 Using GPG key ID: $KEY_ID"
-
-# Utwórz Release z poprawnymi hashami
-echo "📄 Creating Release file..."
+echo "📄 Creating Release file...";
 cd dists/stable
 
 cat > Release << EOF
@@ -104,4 +126,10 @@ gpg --default-key "$KEY_ID" --clearsign -o InRelease Release
 
 cd ../../
 
+# Zapisz klucz publiczny do repozytorium
+echo "💾 Saving public key to KEY.gpg..."
+gpg --armor --export "$KEY_ID" > KEY.gpg
+
 echo "✅ Repository created and signed successfully!"
+echo "🔑 Used GPG key ID: $KEY_ID"
+echo "📁 Public key saved to: KEY.gpg"

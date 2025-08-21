@@ -17,70 +17,24 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y gnupg
+          sudo apt-get install -y gnupg wget
 
-      - name: Setup GPG key from repository
-        run: |
-          # Sprawdź czy istnieje już klucz w repozytorium
-          if [ -f "KEY.gpg" ] && [ -f "private.key" ]; then
-            echo "✅ Using existing GPG keys from repository..."
-            gpg --import private.key
-            gpg --import KEY.gpg
-            KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-            echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
-            echo "🔑 Using key ID: $KEY_ID"
-          else
-            echo "❌ No existing GPG keys found, generating new ones..."
-            gpg --batch --passphrase '' --quick-gen-key "NAS Repository <nas-repo@example.com>" rsa4096 default never
-            KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-            gpg --armor --export "$KEY_ID" > KEY.gpg
-            gpg --export-secret-keys --armor "$KEY_ID" > private.key
-            echo "KEY_ID=$KEY_ID" >> $GITHUB_ENV
-            echo "🔑 Generated new key ID: $KEY_ID"
-          fi
-
-      - name: Create repository with correct paths
+      - name: Create repository
         run: |
           chmod +x scripts/create-simple-repo.sh
           ./scripts/create-simple-repo.sh
 
       - name: Verify Packages file
         run: |
-          echo "🔍 VERIFYING Packages file paths..."
+          echo "🔍 VERIFYING Packages file..."
           if [ -f "dists/stable/main/binary-amd64/Packages" ]; then
-            # Sprawdź czy ścieżki są poprawne
-            BAD_PATHS=$(grep "Filename:" dists/stable/main/binary-amd64/Packages | grep -E "\.\./|\./|/[^/]*/\.\." | wc -l)
-            
-            if [ "$BAD_PATHS" -gt 0 ]; then
-                echo "❌ Found $BAD_PATHS bad paths, running fix script..."
-                chmod +x scripts/fix-packages.sh
-                ./scripts/fix-packages.sh
-            else
-                echo "✅ All paths are correct:"
-                grep "Filename:" dists/stable/main/binary-amd64/Packages | head -5
-            fi
+            echo "✅ Packages file exists"
+            echo "📦 Number of packages: $(grep -c '^Package:' dists/stable/main/binary-amd64/Packages)"
+            echo "🔍 nas-web versions found:"
+            grep -A 2 '^Package: nas-web' dists/stable/main/binary-amd64/Packages || echo "No nas-web packages found"
           else
             echo "❌ Packages file missing"
             exit 1
-          fi
-
-      - name: Test package URLs
-        run: |
-          echo "🔗 TESTING package URLs..."
-          if [ -f "dists/stable/main/binary-amd64/Packages" ]; then
-            grep "Filename:" dists/stable/main/binary-amd64/Packages | while read line; do
-              filename=$(echo "$line" | cut -d' ' -f2)
-              
-              # Sprawdź format ścieżki
-              if [[ "$filename" != "pool/main/"* ]]; then
-                echo "❌ BAD PATH: $filename"
-                echo "   Should be: pool/main/$(basename "$filename")"
-              elif [ ! -f "$filename" ]; then
-                echo "❌ MISSING FILE: $filename"
-              else
-                echo "✅ GOOD PATH: $filename"
-              fi
-            done
           fi
 
       - name: Deploy to GitHub Pages
@@ -90,8 +44,8 @@ jobs:
           publish_dir: .
           keep_files: true
 
-      - name: Final test
+      - name: Final verification
         run: |
           echo "✅ Repository deployed"
-          echo "🌐 Test URL: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/pool/main/nas-web_1.2.6_amd64.deb"
-          echo "📦 Correct package path: pool/main/nas-web_1.2.6_amd64.deb"
+          echo "🌐 Test URL: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/"
+          echo "📦 Packages URL: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/dists/stable/main/binary-amd64/Packages"

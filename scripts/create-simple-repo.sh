@@ -1,5 +1,5 @@
 #!/bin/bash
-# create-simple-repo.sh - Prosta wersja bez duplikatów
+# create-simple-repo.sh - Ręczne tworzenie POPRAWNEGO pliku Packages
 
 set -e
 
@@ -9,35 +9,60 @@ echo "🏗️ Creating properly structured repository..."
 mkdir -p dists/stable/main/binary-amd64
 mkdir -p pool/main
 
-# Wyczyść i wypełnij pool/main tylko unikalnymi pakietami
-echo "📦 Preparing pool/main/ with unique packages..."
-rm -f pool/main/*.deb
+# Skopiuj pakiety do pool/
+echo "📦 Copying packages to pool/..."
+find pool -name "*.deb" -exec cp {} pool/main/ \;
 
-# Skopiuj tylko unikalne pakiety
-declare -A unique_packages
-find . -name "*.deb" -type f | while read deb_file; do
-    filename=$(basename "$deb_file")
-    pkg_name=$(echo "$filename" | cut -d'_' -f1)
-    pkg_version=$(echo "$filename" | cut -d'_' -f2)
-    
-    # Klucz: nazwa+wersja
-    key="${pkg_name}_${pkg_version}"
-    
-    if [ -z "${unique_packages[$key]}" ]; then
-        cp "$deb_file" "pool/main/"
-        unique_packages[$key]=$filename
-        echo "✅ Added: $filename"
-    else
-        echo "⚠️  Skipped duplicate: $filename (already have: ${unique_packages[$key]})"
+# UTWÓRZ POPRAWNY PLIK PACKAGES Z WSZYSTKIMI POLAMI
+echo "📦 Creating CORRECT Packages file..."
+cd dists/stable/main/binary-amd64
+
+# Wyczyść stary plik Packages
+> Packages
+
+# Ręcznie utwórz POPRAWNY plik Packages dla WSZYSTKICH pakietów
+for deb in ../../../../pool/main/*.deb; do
+    if [ -f "$deb" ]; then
+        filename=$(basename "$deb")
+        
+        # Ekstrahuj informacje z pakietu deb
+        pkg_info=$(dpkg-deb -I "$deb")
+        control_info=$(dpkg-deb -f "$deb")
+        
+        pkg_name=$(echo "$control_info" | grep "^Package:" | cut -d' ' -f2)
+        pkg_version=$(echo "$control_info" | grep "^Version:" | cut -d' ' -f2)
+        pkg_arch=$(echo "$control_info" | grep "^Architecture:" | cut -d' ' -f2)
+        pkg_depends=$(echo "$control_info" | grep "^Depends:" | cut -d' ' -f2- || echo "")
+        pkg_maintainer=$(echo "$control_info" | grep "^Maintainer:" | cut -d' ' -f2- || echo "Gekomod <zaba141@o2.pl>")
+        pkg_description=$(echo "$control_info" | grep "^Description:" | cut -d' ' -f2- || echo "NAS Application")
+        pkg_installed_size=$(echo "$control_info" | grep "^Installed-Size:" | cut -d' ' -f2 || echo "0")
+        pkg_section=$(echo "$control_info" | grep "^Section:" | cut -d' ' -f2 || echo "web")
+        pkg_priority=$(echo "$control_info" | grep "^Priority:" | cut -d' ' -f2 || echo "optional")
+        pkg_homepage=$(echo "$control_info" | grep "^Homepage:" | cut -d' ' -f2- || echo "https://naspanel.site")
+        
+        # Zapisz wszystkie wymagane pola
+        echo "Package: $pkg_name" >> Packages
+        echo "Version: $pkg_version" >> Packages
+        echo "Architecture: $pkg_arch" >> Packages
+        echo "Maintainer: $pkg_maintainer" >> Packages
+        echo "Installed-Size: $pkg_installed_size" >> Packages
+        echo "Depends: $pkg_depends" >> Packages
+        echo "Section: $pkg_section" >> Packages
+        echo "Priority: $pkg_priority" >> Packages
+        echo "Homepage: $pkg_homepage" >> Packages
+        echo "Filename: pool/main/$filename" >> Packages
+        echo "Size: $(stat -c%s "$deb")" >> Packages
+        echo "SHA256: $(sha256sum "$deb" | cut -d' ' -f1)" >> Packages
+        echo "MD5sum: $(md5sum "$deb" | cut -d' ' -f1)" >> Packages
+        echo "Description: $pkg_description" >> Packages
+        echo "" >> Packages
+        
+        echo "✅ Added to Packages: $filename"
     fi
 done
 
-# Użyj dpkg-scanpackages
-echo "📦 Creating Packages file..."
-cd dists/stable/main/binary-amd64
-> Packages
-dpkg-scanpackages --multiversion ../../../../pool/main > Packages 2>/dev/null
+# Kompresuj
 gzip -9c Packages > Packages.gz
 cd ../../../../
 
-echo "✅ Repository created with $(ls -la pool/main/*.deb 2>/dev/null | wc -l) unique packages"
+echo "✅ Packages file created with $(grep -c "^Package:" dists/stable/main/binary-amd64/Packages) packages"

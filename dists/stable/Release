@@ -5,8 +5,8 @@ Codename: stable
 Architectures: amd64
 Components: main
 Description: Repository for NAS applications
-Date: Thu, 21 Aug 2025 20:34:02 +0000
+Date: Thu, 21 Aug 2025 22:06:45 +0000
 MD5Sum:
- 63f52bd6a6c213be8474b495c84fb2c3 840 main/binary-amd64/Packages.gz
+ ea0fef509784a1b2dc3216f7daf31ec4 840 main/binary-amd64/Packages.gz
 SHA256:
- 6d390a11d09106358de11bdadb4430a6f27d5ef6ad8c5d96b4395d564650862f 840 main/binary-amd64/Packages.gz
+ 29e44fc9f9f12a7f0590bdd05cec52f58aa41f3c2aa0d34abe9b05dc8aba03bd 840 main/binary-amd64/Packages.gz

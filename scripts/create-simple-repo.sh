@@ -1,5 +1,5 @@
 #!/bin/bash
-# create-simple-repo.sh - Ręczne tworzenie POPRAWNEGO pliku Packages z pobieraniem klucza GPG
+# create-simple-repo.sh - Pobiera zarówno publiczny jak i prywatny klucz GPG
 
 set -e
 
@@ -26,7 +26,6 @@ for deb in ../../../../pool/main/*.deb; do
         filename=$(basename "$deb")
         
         # Ekstrahuj informacje z pakietu deb
-        pkg_info=$(dpkg-deb -I "$deb")
         control_info=$(dpkg-deb -f "$deb")
         
         pkg_name=$(echo "$control_info" | grep "^Package:" | cut -d' ' -f2)
@@ -67,38 +66,65 @@ cd ../../../../
 
 echo "✅ Packages file created with $(grep -c "^Package:" dists/stable/main/binary-amd64/Packages) packages"
 
-# POBIRZ KLUCZ GPG Z REPOZYTORIUM
-echo "🔐 Downloading GPG key from https://repo.naspanel.site/KEY.gpg..."
-KEY_FILE="/tmp/repo-key.gpg"
+# POBIRZ KLUCZE GPG Z REPOZYTORIUM (PUBLICZNY I PRYWATNY)
+echo "🔐 Downloading GPG keys from repository..."
+PUBLIC_KEY_FILE="/tmp/repo-key.gpg"
+PRIVATE_KEY_FILE="/tmp/private.key"
 
-# Pobierz klucz
-if wget -q -O "$KEY_FILE" https://repo.naspanel.site/KEY.gpg; then
-    echo "✅ GPG key downloaded successfully"
-    
-    # Importuj klucz
-    if gpg --import "$KEY_FILE"; then
-        # Pobierz KEY_ID
-        KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-        echo "🔑 Using GPG key ID: $KEY_ID"
-        
-        # Trust the key
-        echo "$KEY_ID:6:" | gpg --import-ownertrust
-    else
-        echo "❌ Failed to import GPG key, generating new one..."
-        # Generuj nowy klucz jeśli import się nie powiódł
-        gpg --batch --passphrase '' --quick-gen-key "NAS Repository <nas-repo@example.com>" rsa4096 default never
-        KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-        echo "🔑 Generated new GPG key ID: $KEY_ID"
-    fi
+# Pobierz klucz publiczny
+if wget -q -O "$PUBLIC_KEY_FILE" https://repo.naspanel.site/KEY.gpg; then
+    echo "✅ Public GPG key downloaded successfully"
 else
-    echo "❌ Failed to download GPG key, generating new one..."
-    # Generuj nowy klucz jeśli pobieranie się nie powiodło
-    gpg --batch --passphrase '' --quick-gen-key "NAS Repository <nas-repo@example.com>" rsa4096 default never
-    KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-    echo "🔑 Generated new GPG key ID: $KEY_ID"
+    echo "❌ Failed to download public GPG key"
+    exit 1
 fi
 
-echo "📄 Creating Release file...";
+# Pobierz klucz prywatny (jeśli dostępny)
+if wget -q -O "$PRIVATE_KEY_FILE" https://repo.naspanel.site/private.key; then
+    echo "✅ Private GPG key downloaded successfully"
+    
+    # Importuj klucz prywatny
+    if gpg --import "$PRIVATE_KEY_FILE"; then
+        echo "✅ Private key imported successfully"
+    else
+        echo "❌ Failed to import private key"
+        exit 1
+    fi
+else
+    echo "⚠️  Private key not available, trying public key only..."
+fi
+
+# Importuj klucz publiczny
+if gpg --import "$PUBLIC_KEY_FILE"; then
+    echo "✅ Public key imported successfully"
+else
+    echo "❌ Failed to import public key"
+    exit 1
+fi
+
+# Pobierz KEY_ID
+KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
+if [ -z "$KEY_ID" ]; then
+    echo "❌ No GPG key found"
+    exit 1
+fi
+
+echo "🔑 Using GPG key ID: $KEY_ID"
+
+# Sprawdź czy mamy klucz prywatny do podpisywania
+if gpg --list-secret-keys --with-colons | grep -q "$KEY_ID"; then
+    echo "✅ Private key available for signing"
+else
+    echo "❌ No private key available for signing"
+    echo "⚠️  Cannot sign repository without private key"
+    exit 1
+fi
+
+# Trust the key
+echo "$KEY_ID:6:" | gpg --import-ownertrust
+
+# Utwórz Release z poprawnymi hashami
+echo "📄 Creating Release file..."
 cd dists/stable
 
 cat > Release << EOF
@@ -126,10 +152,5 @@ gpg --default-key "$KEY_ID" --clearsign -o InRelease Release
 
 cd ../../
 
-# Zapisz klucz publiczny do repozytorium
-echo "💾 Saving public key to KEY.gpg..."
-gpg --armor --export "$KEY_ID" > KEY.gpg
-
 echo "✅ Repository created and signed successfully!"
 echo "🔑 Used GPG key ID: $KEY_ID"
-echo "📁 Public key saved to: KEY.gpg"

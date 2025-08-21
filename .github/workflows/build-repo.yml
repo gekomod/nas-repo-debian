@@ -19,23 +19,23 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gnupg wget
 
+      - name: Setup GPG keys from repository files
+        run: |
+          # Sprawdź czy klucze są już w repozytorium
+          if [ -f "KEY.gpg" ] && [ -f "private.key" ]; then
+            echo "✅ Using existing GPG keys from repository"
+            # Skopiuj klucze do tymczasowego katalogu
+            cp KEY.gpg /tmp/repo-key.gpg
+            cp private.key /tmp/private.key
+          else
+            echo "❌ GPG keys not found in repository"
+            exit 1
+          fi
+
       - name: Create repository
         run: |
           chmod +x scripts/create-simple-repo.sh
           ./scripts/create-simple-repo.sh
-
-      - name: Verify Packages file
-        run: |
-          echo "🔍 VERIFYING Packages file..."
-          if [ -f "dists/stable/main/binary-amd64/Packages" ]; then
-            echo "✅ Packages file exists"
-            echo "📦 Number of packages: $(grep -c '^Package:' dists/stable/main/binary-amd64/Packages)"
-            echo "🔍 nas-web versions found:"
-            grep -A 2 '^Package: nas-web' dists/stable/main/binary-amd64/Packages || echo "No nas-web packages found"
-          else
-            echo "❌ Packages file missing"
-            exit 1
-          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -43,9 +43,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           keep_files: true
-
-      - name: Final verification
-        run: |
-          echo "✅ Repository deployed"
-          echo "🌐 Test URL: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/"
-          echo "📦 Packages URL: https://${{ github.repository_owner }}.github.io/${{ github.repository }}/dists/stable/main/binary-amd64/Packages"

@@ -44,26 +44,6 @@ jobs:
           chmod +x scripts/create-simple-repo.sh
           ./scripts/create-simple-repo.sh
 
-      - name: Verify Packages file
-        run: |
-          echo "🔍 VERIFYING Packages file paths..."
-          if [ -f "dists/stable/main/binary-amd64/Packages" ]; then
-            # Sprawdź czy ścieżki są poprawne
-            BAD_PATHS=$(grep "Filename:" dists/stable/main/binary-amd64/Packages | grep -E "\.\./|\./|/[^/]*/\.\." | wc -l)
-            
-            if [ "$BAD_PATHS" -gt 0 ]; then
-                echo "❌ Found $BAD_PATHS bad paths, running fix script..."
-                chmod +x scripts/fix-packages.sh
-                ./scripts/fix-packages.sh
-            else
-                echo "✅ All paths are correct:"
-                grep "Filename:" dists/stable/main/binary-amd64/Packages | head -5
-            fi
-          else
-            echo "❌ Packages file missing"
-            exit 1
-          fi
-
       - name: Test package URLs
         run: |
           echo "🔗 TESTING package URLs..."

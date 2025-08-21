@@ -1,5 +1,5 @@
 #!/bin/bash
-# create-simple-repo.sh - Poprawione generowanie pliku Packages bez duplikatów
+# create-simple-repo.sh - Prosta wersja bez duplikatów
 
 set -e
 
@@ -9,84 +9,35 @@ echo "🏗️ Creating properly structured repository..."
 mkdir -p dists/stable/main/binary-amd64
 mkdir -p pool/main
 
-# Wyczyść pool/main przed kopiowaniem
-echo "🧹 Cleaning pool/main/..."
+# Wyczyść i wypełnij pool/main tylko unikalnymi pakietami
+echo "📦 Preparing pool/main/ with unique packages..."
 rm -f pool/main/*.deb
 
-# Skopiuj pakiety do pool/ BEZ DUPLIKATÓW
-echo "📦 Copying packages to pool/..."
-# Znajdź wszystkie pakiety .deb i skopiuj UNIKALNE do pool/main/
+# Skopiuj tylko unikalne pakiety
+declare -A unique_packages
 find . -name "*.deb" -type f | while read deb_file; do
     filename=$(basename "$deb_file")
-    # Sprawdź czy pakiet już nie istnieje w pool/main/
-    if [ ! -f "pool/main/$filename" ]; then
+    pkg_name=$(echo "$filename" | cut -d'_' -f1)
+    pkg_version=$(echo "$filename" | cut -d'_' -f2)
+    
+    # Klucz: nazwa+wersja
+    key="${pkg_name}_${pkg_version}"
+    
+    if [ -z "${unique_packages[$key]}" ]; then
         cp "$deb_file" "pool/main/"
-        echo "✅ Copied: $filename"
+        unique_packages[$key]=$filename
+        echo "✅ Added: $filename"
     else
-        echo "⚠️  Skipped (already exists): $filename"
+        echo "⚠️  Skipped duplicate: $filename (already have: ${unique_packages[$key]})"
     fi
 done
 
-# UŻYJ dpkg-scanpackages ZAMIAST RĘCZNEGO TWORZENIA!
-echo "📦 Creating CORRECT Packages file using dpkg-scanpackages..."
-
-# Zainstaluj required tools
-sudo apt-get update
-sudo apt-get install -y dpkg-dev
-
-# Utwórz poprawny plik Packages z wszystkimi polami
+# Użyj dpkg-scanpackages
+echo "📦 Creating Packages file..."
 cd dists/stable/main/binary-amd64
-
-# Wyczyść stary plik Packages
-rm -fr Packages
-
-# Użyj dpkg-scanpackages aby poprawnie wygenerować plik Packages
-# Użyj --multiversion i przekieruj output do pliku
+> Packages
 dpkg-scanpackages --multiversion ../../../../pool/main > Packages 2>/dev/null
-
-
-
-# Kompresuj
 gzip -9c Packages > Packages.gz
 cd ../../../../
 
-echo "✅ Packages file created with $(grep -c "^Package:" dists/stable/main/binary-amd64/Packages) unique packages"
-
-# Pobierz KEY_ID ze zmiennej środowiskowej (ustawionej w workflow)
-KEY_ID=${KEY_ID:-}
-if [ -z "$KEY_ID" ]; then
-    KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
-fi
-
-echo "🔐 Using GPG key ID: $KEY_ID"
-
-# Utwórz Release z poprawnymi hashami
-echo "📄 Creating Release file..."
-cd dists/stable
-
-cat > Release << EOF
-Origin: NAS Repository
-Label: NAS Debian Repository
-Suite: stable
-Codename: stable
-Architectures: amd64
-Components: main
-Description: Repository for NAS applications
-Date: $(date -Ru)
-EOF
-
-# Dodaj hashe do Release
-echo "MD5Sum:" >> Release
-echo " $(md5sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
-
-echo "SHA256:" >> Release
-echo " $(sha256sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
-
-# Podpisz repozytorium
-echo "🔏 Signing repository..."
-gpg --default-key "$KEY_ID" -abs -o Release.gpg Release
-gpg --default-key "$KEY_ID" --clearsign -o InRelease Release
-
-cd ../../
-
-echo "✅ Repository created and signed successfully!"
+echo "✅ Repository created with $(ls -la pool/main/*.deb 2>/dev/null | wc -l) unique packages"

@@ -138,11 +138,12 @@ Description: Repository for NAS applications
 Date: $(date -Ru)
 EOF
 
-# Dodaj hashe do Release
 echo "MD5Sum:" >> Release
+echo " $(md5sum main/binary-amd64/Packages | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages) main/binary-amd64/Packages" >> Release
 echo " $(md5sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
 
 echo "SHA256:" >> Release
+echo " $(sha256sum main/binary-amd64/Packages | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages) main/binary-amd64/Packages" >> Release
 echo " $(sha256sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
 
 # Podpisz repozytorium

@@ -3,7 +3,7 @@
 
 set -e
 
-REPO_URL="https://github.com/twojusername/nas-repo-debian/raw/main"
+REPO_URL="https://repo.naspanel.site"
 TEMP_DIR=$(mktemp -d)
 
 echo "📦 Instalacja repozytorium NAS..."

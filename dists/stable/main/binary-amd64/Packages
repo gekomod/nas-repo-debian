@@ -25,3 +25,12 @@ SHA256: 7435712e24faaf4330d947e75ff41df88aa0ea9398c014e814c7a62df09263e9
 MD5sum: a1e799fa78d1969655e243b74899bd70
 Description: NAS Application
 
+Package: nas-web
+Version: 1.2.7
+Architecture: amd64
+Filename: pool/main/nas-web_1.2.7_amd64.deb
+Size: 23604
+SHA256: 7c7f35333d6a4913a3b4f8f3356f2ddac97fe04b3028c3e775fa82d51b67d5d7
+MD5sum: aca2baf5f7305ed10fd96a18b7626ca5
+Description: NAS Application
+

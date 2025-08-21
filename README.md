@@ -12,7 +12,7 @@ Repozytorium Debian dla pakietów NAS: `nas-panel`, `nas-webserver`, i innych.
 
 ```bash
 # Dodaj repozytorium
-curl -sSL https://raw.githubusercontent.com/twojusername/nas-repo-debian/main/install-repo.sh | sudo bash
+curl -sSL https://repo.naspanel.site/install-repo.sh | sudo bash
 
 # Zainstaluj pakiety
 sudo apt-get update
@@ -23,10 +23,10 @@ sudo apt-get install nas-panel nas-webserver
 
 ```bash
 # Dodaj klucz GPG
-wget -qO - https://github.com/twojusername/nas-repo-debian/raw/main/KEY.gpg | sudo apt-key add -
+wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -
 
 # Dodaj źródło
-echo "deb [arch=amd64] https://github.com/twojusername/nas-repo-debian/raw/main/ stable main" | \
+echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | \
 sudo tee /etc/apt/sources.list.d/nas-repo.list
 
 # Aktualizuj i instaluj

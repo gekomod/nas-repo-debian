@@ -1,5 +1,5 @@
 #!/bin/bash
-# create-simple-repo.sh - Poprawione generowanie pliku Packages z wszystkimi polami
+# create-simple-repo.sh - Poprawione generowanie pliku Packages bez duplikatów
 
 set -e
 
@@ -9,10 +9,23 @@ echo "🏗️ Creating properly structured repository..."
 mkdir -p dists/stable/main/binary-amd64
 mkdir -p pool/main
 
-# Skopiuj pakiety do pool/
+# Wyczyść pool/main przed kopiowaniem
+echo "🧹 Cleaning pool/main/..."
+rm -f pool/main/*.deb
+
+# Skopiuj pakiety do pool/ BEZ DUPLIKATÓW
 echo "📦 Copying packages to pool/..."
-find pool -name "*.deb" -exec cp {} pool/main/ \;
-find . -name "*.deb" -exec cp {} pool/main/ 2>/dev/null \; || true
+# Znajdź wszystkie pakiety .deb i skopiuj UNIKALNE do pool/main/
+find . -name "*.deb" -type f | while read deb_file; do
+    filename=$(basename "$deb_file")
+    # Sprawdź czy pakiet już nie istnieje w pool/main/
+    if [ ! -f "pool/main/$filename" ]; then
+        cp "$deb_file" "pool/main/"
+        echo "✅ Copied: $filename"
+    else
+        echo "⚠️  Skipped (already exists): $filename"
+    fi
+done
 
 # UŻYJ dpkg-scanpackages ZAMIAST RĘCZNEGO TWORZENIA!
 echo "📦 Creating CORRECT Packages file using dpkg-scanpackages..."
@@ -28,18 +41,29 @@ cd dists/stable/main/binary-amd64
 > Packages
 
 # Użyj dpkg-scanpackages aby poprawnie wygenerować plik Packages
-dpkg-scanpackages --multiversion ../../../../pool/main > Packages
+# Użyj --multiversion i przekieruj output do pliku
+dpkg-scanpackages --multiversion ../../../../pool/main > Packages 2>/dev/null
+
+# Sprawdź czy nie ma duplikatów
+echo "🔍 Checking for duplicates..."
+duplicate_count=$(grep "^Package: " Packages | sort | uniq -d | wc -l)
+if [ "$duplicate_count" -gt 0 ]; then
+    echo "❌ Found $duplicate_count duplicate packages, removing duplicates..."
+    # Usuń duplikaty zachowując tylko pierwsze wystąpienie
+    awk '/^Package: / { if (!seen[$0]++) {print; while ((getline line) > 0) {if (line == "") {print line; break}; print line}} else {while ((getline line) > 0) {if (line == "") break}}}' Packages > Packages.tmp
+    mv Packages.tmp Packages
+fi
 
 # Kompresuj
 gzip -9c Packages > Packages.gz
 cd ../../../../
 
-echo "✅ Packages file created with $(grep -c "^Package:" dists/stable/main/binary-amd64/Packages) packages"
+echo "✅ Packages file created with $(grep -c "^Package:" dists/stable/main/binary-amd64/Packages) unique packages"
 
 # Pobierz KEY_ID ze zmiennej środowiskowej (ustawionej w workflow)
 KEY_ID=${KEY_ID:-}
 if [ -z "$KEY_ID" ]; then
-    KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10);
+    KEY_ID=$(gpg --list-keys --with-colons | grep '^fpr:' | head -1 | cut -d':' -f10)
 fi
 
 echo "🔐 Using GPG key ID: $KEY_ID"
@@ -59,23 +83,15 @@ Description: Repository for NAS applications
 Date: $(date -Ru)
 EOF
 
-
+# Dodaj hashe do Release
 echo "MD5Sum:" >> Release
-
-find . -type f -name Packages* -o -name Release* | while read file; do
-    size=$(stat -c%s "$file")
-    echo " $(md5sum "$file" | cut -d' ' -f1) $size $(echo "$file" | sed 's|^\./||')" >> Release
-done
+echo " $(md5sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
 
 echo "SHA256:" >> Release
-find . -type f -name Packages* -o -name Release* | while read file; do
-    size=$(stat -c%s "$file")
-    echo " $(sha256sum "$file" | cut -d' ' -f1) $size $(echo "$file" | sed 's|^\./||')" >> Release
-done
+echo " $(sha256sum main/binary-amd64/Packages.gz | cut -d' ' -f1) $(stat -c%s main/binary-amd64/Packages.gz) main/binary-amd64/Packages.gz" >> Release
 
 # Podpisz repozytorium
 echo "🔏 Signing repository..."
-
 gpg --default-key "$KEY_ID" -abs -o Release.gpg Release
 gpg --default-key "$KEY_ID" --clearsign -o InRelease Release
 

@@ -6,7 +6,6 @@ Repozytorium Debian dla pakietów NAS: `nas-panel`, `nas-webserver`, i innych.
 
 - `nas-panel` - Panel zarządzania NAS
 - `nas-webserver` - Serwer WWW dla NAS
-- `nas-tools` - Narzędzia systemowe
 
 ## 🚀 Szybka instalacja
 

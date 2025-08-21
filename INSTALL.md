@@ -16,4 +16,4 @@ sudo apt update
 sudo apt install nas-panel nas-web
 ```
 
-## 🔑 GPG Key ID: D661F8A15E0F3279E82311E3DEAF706C8FA4D457
+## 🔑 GPG Key ID: F5346BDE8A82F78F7BC8C4A5ADAC6735A74C7E45

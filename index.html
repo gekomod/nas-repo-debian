@@ -507,8 +507,8 @@
                     <span class="iconify" data-icon="mdi:key-chain"></span>
                     <span id="command1-title">Dodaj klucz GPG</span>
                 </div>
-                <pre><code class="language-bash">wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -</code></pre>
-                <button class="copy-btn" onclick="copyToClipboard('wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -', this)">
+                <pre><code class="language-bash">sudo wget -qO - https://repo.naspanel.site/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/nas-repo.gpg</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('sudo wget -qO - https://repo.naspanel.site/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/nas-repo.gpg', this)">
                     <span class="iconify" data-icon="mdi:content-copy" style="font-size: 14px;"></span>
                     <span class="copy-text" data-pl="Kopiuj" data-en="Copy">Kopiuj</span>
                 </button>
@@ -519,8 +519,8 @@
                     <span class="iconify" data-icon="mdi:package"></span>
                     <span id="command2-title">Dodaj repozytorium</span>
                 </div>
-                <pre><code class="language-bash">echo "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list</code></pre>
-                <button class="copy-btn" onclick="copyToClipboard('echo \"deb [arch=amd64] https://repo.naspanel.site/ stable main\" | sudo tee /etc/apt/sources.list.d/nas-repo.list', this)">
+                <pre><code class="language-bash">echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/nas-repo.gpg] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('echo \"deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/nas-repo.gpg] https://repo.naspanel.site/ stable main\" | sudo tee /etc/apt/sources.list.d/nas-repo.list', this)">
                     <span class="iconify" data-icon="mdi:content-copy" style="font-size: 14px;"></span>
                     <span class="copy-text" data-pl="Kopiuj" data-en="Copy">Kopiuj</span>
                 </button>

@@ -121,3 +121,29 @@ Description: Lightweight NAS web interface
   * Thread pool for high performance
   * Comprehensive security features
 
+Package: nas-web
+Architecture: amd64
+Version: 1.2.9
+Priority: optional
+Section: web
+Maintainer: Gekomod <zaba141@o2.pl>
+Installed-Size: 83
+Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
+Filename: main/n/nas-web_1.2.9_amd64/nas-web_1.2.9_amd64.deb
+Size: 23648
+MD5sum: aefea17743ba933ce8a61abb93f56273
+SHA1: 173bc2e162951db071be436d6bc214fc2e2b7364
+SHA256: d1c58248bee25017693492a669a1eb314622157fbba68d9679df97dfc2a69626
+SHA512: fb78ffe007498830b2702395392445e1deaedac490aa34693e3ed02b59d10dcc36f89529e34ef2f71d24253a3fb000e4e666a4e40008d4a8eefbe26277fbcbd3
+Homepage: https://github.com/gekomod/nas-webserver
+Description: Lightweight NAS web interface
+ A fast and secure web interface for NAS management with modern features
+ including HTTPS support, API endpoints, and real-time monitoring.
+ .
+ Features:
+  * Secure HTTPS support with modern ciphers
+  * RESTful API for integration
+  * Real-time system monitoring
+  * Thread pool for high performance
+  * Comprehensive security features
+

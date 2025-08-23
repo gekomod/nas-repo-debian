@@ -43,6 +43,21 @@ SHA256: 750e145e4d7a9540ada6d3f210de3336478392bdf0fec1e268536ab2eb350c9d
 MD5sum: a2fc06856d7f63a45432fa3621e4dd50
 Description: Web-based NAS administration panel
 
+Package: nas-panel
+Version: 1.0.7-7
+Architecture: amd64
+Maintainer: Gekomod <zaba141@o2.pl>
+Installed-Size: 18143
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
+Section: web
+Priority: optional
+Homepage: https://naspanel.site
+Filename: pool/main/nas-panel_1.0.7-7_amd64.deb
+Size: 2091256
+SHA256: ec0a4c699fb4930b852e77c519c62c650af2f338a9b047cda0f638aa5242c753
+MD5sum: d451f97e36666f5af9ef0ad9e1dc3f7c
+Description: Web-based NAS administration panel
+
 Package: nas-web
 Version: 1.2.10
 Architecture: amd64

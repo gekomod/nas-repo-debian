@@ -532,8 +532,8 @@
                     <span id="command3-title">Aktualizuj i instaluj</span>
                 </div>
                 <pre><code class="language-bash">sudo apt update
-sudo apt install nas-panel nas-webserver</code></pre>
-                <button class="copy-btn" onclick="copyToClipboard('sudo apt update\nsudo apt install nas-panel nas-webserver', this)">
+sudo apt install nas-panel nas-web</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('sudo apt update\nsudo apt install nas-panel nas-web', this)">
                     <span class="iconify" data-icon="mdi:content-copy" style="font-size: 14px;"></span>
                     <span class="copy-text" data-pl="Kopiuj" data-en="Copy">Kopiuj</span>
                 </button>
@@ -558,7 +558,7 @@ sudo apt install nas-panel nas-webserver</code></pre>
                     <span class="iconify" data-icon="mdi:github"></span>
                     GitHub
                 </a>
-                <a href="#" class="btn btn-secondary">
+                <a href="https://forum.naspanel.site/" class="btn btn-secondary">
                     <span class="iconify" data-icon="mdi:forum"></span>
                     <span id="forum-text" data-pl="Forum" data-en="Forum">Forum</span>
                 </a>
@@ -658,7 +658,7 @@ sudo apt install nas-panel nas-webserver</code></pre>
         }
         
         function copyAllCommands() {
-            const commands = `wget -qO - https://repo.naspanel.site/KEY.gpg | sudo apt-key add -\necho "deb [arch=amd64] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list\nsudo apt update\nsudo apt install nas-panel nas-webserver`;
+            const commands = `sudo wget -qO - https://repo.naspanel.site/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/nas-repo.gpg\neecho "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/nas-repo.gpg] https://repo.naspanel.site/ stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list\nsudo apt update\nsudo apt install nas-panel nas-webserver`;
             
             navigator.clipboard.writeText(commands).then(() => {
                 alert(currentLanguage === 'pl' ? 'Wszystkie polecenia zostały skopiowane do schowka!' : 'All commands have been copied to clipboard!');

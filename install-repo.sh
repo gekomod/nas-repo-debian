@@ -1,5 +1,4 @@
 #!/bin/bash
-# install-repo.sh - Skrypt instalacji repozytorium dla użytkowników
 
 set -e
 
@@ -9,12 +8,10 @@ TEMP_DIR=$(mktemp -d)
 echo "📦 Instalacja repozytorium NAS..."
 
 # Pobierz klucz GPG
-wget -q "${REPO_URL}/KEY.gpg" -O "${TEMP_DIR}/nas-repo.gpg"
-sudo apt-key add "${TEMP_DIR}/nas-repo.gpg"
+sudo wget -qO - "${REPO_URL}/KEY.gpg" | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/nas-repo.gpg
 
 # Dodaj źródło
-echo "deb [arch=amd64] ${REPO_URL} stable main" | \
-sudo tee /etc/apt/sources.list.d/nas-repo.list
+echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/nas-repo.gpg] ${REPO_URL} stable main" | sudo tee /etc/apt/sources.list.d/nas-repo.list
 
 # Aktualizuj listę pakietów
 sudo apt-get update

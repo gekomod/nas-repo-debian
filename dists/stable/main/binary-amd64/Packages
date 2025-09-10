@@ -93,6 +93,25 @@ Description: Web-based NAS administration panel
  A modern web interface for managing your NAS device with features
  like file management, system monitoring, and configuration tools.
 
+Package: nas-panel
+Architecture: amd64
+Version: 1.0.9
+Priority: optional
+Section: web
+Maintainer: Gekomod <zaba141@o2.pl>
+Installed-Size: 18366
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
+Filename: main/n/nas-panel_1.0.9_amd64/nas-panel_1.0.9_amd64.deb
+Size: 2114868
+MD5sum: 85e542bd067ebe093d06baa1aef1e2bc
+SHA1: d73273e8afd1176efee758677ac6c596b9be2797
+SHA256: 653700d9b0350fea8dd44eb0c2ca7790e0c8e3c21ac5ddb882c3bbf03a804768
+SHA512: aeef59e504895cc66c0d744cb9c20095b41a16aada3751a9af62ec2ecfc8e2d60e09e531235e8942811b5aca3a178088f700f5f634d28f38ce0434257e1f46cd
+Homepage: https://naspanel.site
+Description: Web-based NAS administration panel
+ A modern web interface for managing your NAS device with features
+ like file management, system monitoring, and configuration tools.
+
 Package: nas-web
 Architecture: amd64
 Version: 1.2.10

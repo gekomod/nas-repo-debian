@@ -173,9 +173,9 @@ Section: web
 Priority: optional
 Homepage: https://github.com/gekomod/nas-webserver
 Filename: pool/main/nas-web_1.2.11_amd64.deb
-Size: 25722
-SHA256: 656dfc68771ed6168bf6e3dd8a077407f7e0257edfe3e562d5dd237f7ea7db7b
-MD5sum: 3a233bd7309702bf83ad7c85c3e062c1
+Size: 25634
+SHA256: 35dde291c8c906636d6eadb27b0379d84c7fdbc0ba3d3fefd1ee400717789f22
+MD5sum: 64319c97a99d7217e983a5f17b46693d
 Description: Lightweight NAS web interface
 
 Package: nas-web

@@ -164,6 +164,21 @@ MD5sum: fb9521e6b8ddd19aa72b525b62001b51
 Description: Lightweight NAS web interface
 
 Package: nas-web
+Version: 1.2.11
+Architecture: amd64
+Maintainer: Gekomod <zaba141@o2.pl>
+Installed-Size: 88
+Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
+Section: web
+Priority: optional
+Homepage: https://github.com/gekomod/nas-webserver
+Filename: pool/main/nas-web_1.2.11_amd64.deb
+Size: 25722
+SHA256: 656dfc68771ed6168bf6e3dd8a077407f7e0257edfe3e562d5dd237f7ea7db7b
+MD5sum: 3a233bd7309702bf83ad7c85c3e062c1
+Description: Lightweight NAS web interface
+
+Package: nas-web
 Version: 1.2.5
 Architecture: amd64
 Maintainer: Gekomod <zaba141@o2.pl>

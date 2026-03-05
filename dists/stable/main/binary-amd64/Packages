@@ -188,6 +188,26 @@ Description: Web-based NAS administration panel
  A modern web interface for managing your NAS device with features
  like file management, system monitoring, and configuration tools.
 
+Package: nas-web-dbgsym
+Package-Type: ddeb
+Architecture: amd64
+Version: 1.2.14
+Auto-Built-Package: debug-symbols
+Priority: optional
+Section: debug
+Source: nas-web
+Maintainer: Gekomod <zaba141@o2.pl>
+Installed-Size: 81
+Depends: nas-web (= 1.2.14)
+Filename: main/n/nas-web-dbgsym_1.2.14_amd64/nas-web-dbgsym_1.2.14_amd64.ddeb
+Size: 61648
+MD5sum: 837ff7575cb64340c3a1100dbfa1d11e
+SHA1: edd2ec140cb3e3615fdef2e674e0ec021064404a
+SHA256: ebb2d24b7a8d4805259d67c4fe4e33aec2c73043d9ac205d829af6737da75f1a
+SHA512: 24b9417b7815f4c50741f771dcaedc3fe07225f0c3482fbaf12e5ba3e9b33e4e78a925d929b8eda254f3228eb473ec51d25b39f969c629b7e43916caa184188e
+Description: debug symbols for nas-web
+Build-Ids: 70a52b14f57e1fac3461df935a36bad37653f62a
+
 Package: nas-web
 Architecture: amd64
 Version: 1.2.10

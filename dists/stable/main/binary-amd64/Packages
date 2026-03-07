@@ -6,7 +6,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18173
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.0.7-4_amd64/nas-panel_1.0.7-4_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.0.7-4_amd64/nas-panel_1.0.7-4_amd64.deb
 Size: 2090686
 MD5sum: 19b2119f1dd7494239ba9844dfb53298
 SHA1: d1266f3c95ed37076adfc278e3f632d00f2d5333
@@ -25,7 +25,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18143
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.0.7-5_amd64/nas-panel_1.0.7-5_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.0.7-5_amd64/nas-panel_1.0.7-5_amd64.deb
 Size: 2090568
 MD5sum: 36b3b2ae8c9e8f74d5b9c67e13534359
 SHA1: b56fe013dd9b7c88889490d96c7d1dc311e292bc
@@ -44,7 +44,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18143
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.0.7-6_amd64/nas-panel_1.0.7-6_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.0.7-6_amd64/nas-panel_1.0.7-6_amd64.deb
 Size: 2090576
 MD5sum: a2fc06856d7f63a45432fa3621e4dd50
 SHA1: ab39651006b3b9905f679f178056ff2ba9d2ea7c
@@ -63,7 +63,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18143
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.0.7-7_amd64/nas-panel_1.0.7-7_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.0.7-7_amd64/nas-panel_1.0.7-7_amd64.deb
 Size: 2091256
 MD5sum: d451f97e36666f5af9ef0ad9e1dc3f7c
 SHA1: 8fe9e790cd2d661ac2148ebd5751a81a83edbdf1
@@ -82,7 +82,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18264
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.0.8_amd64/nas-panel_1.0.8_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.0.8_amd64/nas-panel_1.0.8_amd64.deb
 Size: 2104712
 MD5sum: 5dceb0cbd793334ad2b8845f15ceca25
 SHA1: c3b97fb37b9ffc035b7906096643cfe64fac2b9c
@@ -101,7 +101,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18366
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.0.9_amd64/nas-panel_1.0.9_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.0.9_amd64/nas-panel_1.0.9_amd64.deb
 Size: 2114868
 MD5sum: 85e542bd067ebe093d06baa1aef1e2bc
 SHA1: d73273e8afd1176efee758677ac6c596b9be2797
@@ -120,7 +120,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18421
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.1.0_amd64/nas-panel_1.1.0_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.1.0_amd64/nas-panel_1.1.0_amd64.deb
 Size: 2123826
 MD5sum: b7b7d5271ff80495c1b46d33ee633dba
 SHA1: 690b48b2a3da7cc15b4df89d90f3d63552ddd396
@@ -139,7 +139,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18592
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.1.1_amd64/nas-panel_1.1.1_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.1.1_amd64/nas-panel_1.1.1_amd64.deb
 Size: 3291342
 MD5sum: 386ad31b69e3a2788799b06e46bbe2f3
 SHA1: 36731b632fafe4a62230fb92709504455185ff73
@@ -158,7 +158,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 18597
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.1.2_amd64/nas-panel_1.1.2_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.1.2_amd64/nas-panel_1.1.2_amd64.deb
 Size: 3296280
 MD5sum: 5fea8b3dcc3a202b7d3a692d08537da2
 SHA1: d37ed7ca252d74177e7600141eafe9ec96eb4a5a
@@ -177,7 +177,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 15480
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 11), debconf (>= 0.5.00), nodejs (>= 22), npm, sqlite3, ethtool, ufw, network-manager, smartmontools, net-tools, iperf3, iproute2, jq, python3, make, g++, musl-dev, samba, mdadm, lsof, rsync, curl, wget, cron
-Filename: main/n/nas-panel_1.1.3_amd64/nas-panel_1.1.3_amd64.deb
+Filename: ../../pool/main/n/nas-panel_1.1.3_amd64/nas-panel_1.1.3_amd64.deb
 Size: 2251240
 MD5sum: 5b391fb991da0fdbab1b70a573bc9111
 SHA1: a7659ddc4c69f44662f85cdd040d22e3aa1a20af
@@ -199,7 +199,7 @@ Source: nas-web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 81
 Depends: nas-web (= 1.2.14)
-Filename: main/n/nas-web-dbgsym_1.2.14_amd64/nas-web-dbgsym_1.2.14_amd64.ddeb
+Filename: ../../pool/main/n/nas-web-dbgsym_1.2.14_amd64/nas-web-dbgsym_1.2.14_amd64.ddeb
 Size: 61648
 MD5sum: 837ff7575cb64340c3a1100dbfa1d11e
 SHA1: edd2ec140cb3e3615fdef2e674e0ec021064404a
@@ -216,7 +216,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 84
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.10_amd64/nas-web_1.2.10_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.10_amd64/nas-web_1.2.10_amd64.deb
 Size: 23682
 MD5sum: fb9521e6b8ddd19aa72b525b62001b51
 SHA1: 4f85c3693696efb5e48f2076aaded5a2bf34a8ed
@@ -242,7 +242,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 88
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.11_amd64/nas-web_1.2.11_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.11_amd64/nas-web_1.2.11_amd64.deb
 Size: 25634
 MD5sum: 64319c97a99d7217e983a5f17b46693d
 SHA1: b11f1674e94880e082b347a0b958ae4100835145
@@ -268,7 +268,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 92
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.14_amd64/nas-web_1.2.14_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.14_amd64/nas-web_1.2.14_amd64.deb
 Size: 27790
 MD5sum: 2ba9e325faaa3309d9b5f141df3ae1d7
 SHA1: d1840e59e0e1e798c8098ca09dd4f3bd37d8a19d
@@ -294,7 +294,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 83
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.5_amd64/nas-web_1.2.5_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.5_amd64/nas-web_1.2.5_amd64.deb
 Size: 23500
 MD5sum: efb6ad2f61d50d11d90fb9e35876c52f
 SHA1: 1bab11c27364475a00fb396559a7bfb1d75ffc3c
@@ -320,7 +320,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 83
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.6_amd64/nas-web_1.2.6_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.6_amd64/nas-web_1.2.6_amd64.deb
 Size: 23532
 MD5sum: a1e799fa78d1969655e243b74899bd70
 SHA1: b1dec7e97ad59d48110c5e7ba1ffeac9764a6097
@@ -346,7 +346,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 83
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.7_amd64/nas-web_1.2.7_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.7_amd64/nas-web_1.2.7_amd64.deb
 Size: 23604
 MD5sum: aca2baf5f7305ed10fd96a18b7626ca5
 SHA1: 4c154873949cce12cacc7cf9eec40be77b18f12f
@@ -372,7 +372,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 83
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.8_amd64/nas-web_1.2.8_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.8_amd64/nas-web_1.2.8_amd64.deb
 Size: 23634
 MD5sum: a9c38bcf4c8903a631479250a06030bc
 SHA1: 4620713cdf00d4f9733d3afb79750a84fd02472c
@@ -398,7 +398,7 @@ Section: web
 Maintainer: Gekomod <zaba141@o2.pl>
 Installed-Size: 83
 Depends: libc6 (>= 2.34), libnghttp2-14 (>= 1.3.0), libssl3 (>= 3.0.0~~alpha1), zlib1g (>= 1:1.2.0)
-Filename: main/n/nas-web_1.2.9_amd64/nas-web_1.2.9_amd64.deb
+Filename: ../../pool/main/n/nas-web_1.2.9_amd64/nas-web_1.2.9_amd64.deb
 Size: 23648
 MD5sum: aefea17743ba933ce8a61abb93f56273
 SHA1: 173bc2e162951db071be436d6bc214fc2e2b7364
@@ -415,4 +415,23 @@ Description: Lightweight NAS web interface
   * Real-time system monitoring
   * Thread pool for high performance
   * Comprehensive security features
+
+Package: nas-web
+Architecture: amd64
+Version: 2.0.0-1
+Priority: optional
+Section: web
+Maintainer: NAS Panel Team <admin@localhost>
+Installed-Size: 8256
+Depends: libuv1 (>= 1.40), libssl3, liblua5.4-0
+Filename: ../../pool/main/n/nas-web_2.0.0-1_amd64/nas-web_2.0.0-1_amd64.deb
+Size: 2749086
+MD5sum: 7d1d248e71656568f9cfa3ae8009c1a7
+SHA1: 386bfa45d0cfc6db534e25c4991625ed6e59387e
+SHA256: 8f50bbb584599488429e2c8282ce463c59fb76fae02d85ab2b297b4863d2beff
+SHA512: fe85ef318e8b23cd68a6b49daa67c735344be9c3e62e718fcd915eaf49d304890a840f91cb9fbb4c3432f3adf3335a5072209770a006f1f7f0bebc851c872f32
+Description: NAS Panel Web Server
+ High-performance C++20 reverse proxy for NAS Panel.
+ HTTP/1.1, HTTP/2, Lua scripting, built-in health endpoints,
+ admin panel at /np_admin with Basic Auth protection.
 

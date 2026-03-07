@@ -5,4 +5,21 @@ Codename: stable
 Architectures: amd64
 Components: main
 Description: Repository for NAS applications
-Date: Thu, 05 Mar 2026 20:31:30 +0000
+Date: Sat, 07 Mar 2026 22:21:33 +0000
+Date: Sat, 07 Mar 2026 22:21:33 +0000
+MD5Sum:
+ 17eba2af59c1efdc6a47902f67ad59cd              242 Release
+ bbaf193dc947929db40b0eed4bc3706b            20147 main/binary-amd64/Packages
+ 8a03f6dd49ea28718eb3cd7843b53363             4989 main/binary-amd64/Packages.gz
+SHA1:
+ bd164df28c5dc2ce7e9b05407a62323a097300b2              242 Release
+ 86ab3b6364c116bf411ddfd44926be8352800c30            20147 main/binary-amd64/Packages
+ 4a6793f52e5ab48c5eee2bf11c695d089a6b8560             4989 main/binary-amd64/Packages.gz
+SHA256:
+ 607315d7b920d980c8b1caf2ec2b13ef8cdb18a3aaea1f4ae0a8c931f072156e              242 Release
+ a75d53d44719b8ee8b905c34712f7ffb1cd9dec03606e08388c7e9569f69bf18            20147 main/binary-amd64/Packages
+ 7f4823763febcda62e24c38cd4b8efddf4d68d87d859a506d52e4bbc8fedd92e             4989 main/binary-amd64/Packages.gz
+SHA512:
+ f4619e728c3489a6da1c85972d7da51d6f4fbdfe494b5142a992e6e3f9d231553b8b4b124ddd522683421253b9842a59e415724172a46088fdd11704875fa751              242 Release
+ d2be1ca806a5cec1dd56c4ce3c232a6a4957069d60efde7fd9ce59705fc09740f36d484019149c1f7ab0f896341eec0bec2c3156ae9fa36945b9bd05196f238f            20147 main/binary-amd64/Packages
+ c78cdcc480767b15dc3e9e644bae05c0b020339c3a23957b8d5a8b393e851faea6dd2a7d80ca2c3c16de651e82b0fd5666a0e56c5562433ad99b50936748265c             4989 main/binary-amd64/Packages.gz

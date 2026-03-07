@@ -268,3 +268,18 @@ SHA256: d1c58248bee25017693492a669a1eb314622157fbba68d9679df97dfc2a69626
 MD5sum: aefea17743ba933ce8a61abb93f56273
 Description: Lightweight NAS web interface
 
+Package: nas-web
+Version: 2.0.0-1
+Architecture: amd64
+Maintainer: NAS Panel Team <admin@localhost>
+Installed-Size: 8256
+Depends: libuv1 (>= 1.40), libssl3, liblua5.4-0
+Section: web
+Priority: optional
+Homepage: 
+Filename: pool/main/nas-web_2.0.0-1_amd64.deb
+Size: 2749086
+SHA256: 8f50bbb584599488429e2c8282ce463c59fb76fae02d85ab2b297b4863d2beff
+MD5sum: 7d1d248e71656568f9cfa3ae8009c1a7
+Description: NAS Panel Web Server
+

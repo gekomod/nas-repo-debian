@@ -1,0 +1,16 @@
+Origin: NAS Repository
+Label: NAS Debian Repository
+Suite: stable
+Codename: stable
+Architectures: amd64
+Acquire-By-Hash: no
+APT-Sources: no
+Components: main
+Description: Repository for NAS applications
+Date: Sat, 07 Mar 2026 22:21:18 +0000
+MD5Sum:
+ d41d8cd98f00b204e9800998ecf8427e 0 main/binary-amd64/Packages
+ 66892b764936d928a9da951fc50644d2 29 main/binary-amd64/Packages.gz
+SHA256:
+ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 0 main/binary-amd64/Packages
+ 46ebcaade02fbf7d7524517e2b435c3ce2140fa465b6b207efab072a0fb229ec 29 main/binary-amd64/Packages.gz
